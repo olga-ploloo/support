@@ -9,8 +9,7 @@ class Ticket(models.Model):
         UNSOLVED = 'unsolved'
         FROZEN = 'frozen'
 
-
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, blank=True)
     author = models.ForeignKey(
         get_user_model(),
         null=True,
@@ -23,9 +22,10 @@ class Ticket(models.Model):
         choices=TicketStatus.choices,
         default=TicketStatus.UNSOLVED
     )
-    description = models.TextField()
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     # created_at = models.DateTimeField('created at', auto_now_add=True)
     # updated_at = models.DateTimeField('updated at', auto_now=True)
 
