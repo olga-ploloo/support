@@ -16,12 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_framework.routers import DefaultRouter
 
-from ticket.views import TicketApiView
+from ticket.views import TicketViewSet
+from user.views import UserListView, UserRegistrationView, UserLoginView
+
+router = DefaultRouter()
+router.register('tickets', TicketViewSet, basename='ticket')
 
 urlpatterns = [
+path('v1/', include(router.urls)),
+    # router.urls,
     path('admin/', admin.site.urls),
-    path('api/ticketslist', TicketApiView.as_view()),
+    path('register', UserRegistrationView.as_view(), name='register'),
+    path('login', UserLoginView.as_view(), name='login'),
+    path('users', UserListView.as_view(), name='users'),
     # path('auth/', include('djoser.urls')),
     # path('auth/', include('djoser.urls.jwt')),
     # path('api/user/', include('user.urls')),
