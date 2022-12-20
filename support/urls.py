@@ -15,8 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.urls import re_path as url
+from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework.routers import DefaultRouter
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 from ticket.views import TicketViewSet
 from user.views import UserListView, UserRegistrationView, UserLoginView
@@ -24,9 +28,26 @@ from user.views import UserListView, UserRegistrationView, UserLoginView
 router = DefaultRouter()
 router.register('tickets', TicketViewSet, basename='ticket')
 
+schema_view = get_schema_view(
+    openapi.Info(
+
+        title="Support API",
+
+        default_version='v1',
+
+        description="Test description",
+    ),
+    public=True,
+)
+
 urlpatterns = [
-path('v1/', include(router.urls)),
-    # router.urls,
+    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    # path('schema', get_schema_view(
+    #     title="Support API",
+    #     description="Test description",
+    #     version='v1',
+    # ), name='api-schema'),
+    # path('v1/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('register', UserRegistrationView.as_view(), name='register'),
     path('login', UserLoginView.as_view(), name='login'),
@@ -38,4 +59,4 @@ path('v1/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-]
+] + router.urls
