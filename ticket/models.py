@@ -34,16 +34,3 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f'{self.status} - {self.created_at.strftime("%Y-%m-%d%H:%M:%S")}'
-
-
-class Message(models.Model):
-    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='messages')
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    message = models.TextField(blank=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['created_at']
-
-    def __str__(self):
-        return self.message

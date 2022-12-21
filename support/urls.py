@@ -22,11 +22,14 @@ from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from message.views import MessageViewSet
 from ticket.views import TicketViewSet
-from user.views import UserListView, UserRegistrationView, UserLoginView
+from user.views import UserRegistrationView, UserLoginView, UserViewSet
 
 router = DefaultRouter()
 router.register('tickets', TicketViewSet, basename='ticket')
+router.register('users', UserViewSet, basename='user')
+router.register('messages', MessageViewSet, basename='message')
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -51,7 +54,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('register', UserRegistrationView.as_view(), name='register'),
     path('login', UserLoginView.as_view(), name='login'),
-    path('users', UserListView.as_view(), name='users'),
     # path('auth/', include('djoser.urls')),
     # path('auth/', include('djoser.urls.jwt')),
     # path('api/user/', include('user.urls')),

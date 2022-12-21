@@ -1,14 +1,10 @@
-from django.shortcuts import render
 
-# Create your views here.
-from django.http import HttpResponse
+# from .permissions import IsSupport
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -72,28 +68,45 @@ class UserLoginView(APIView):
             return Response(response, status=status_code)
 
 
-class UserListView(APIView):
+#
+# class UserListView(APIView):
+#     serializer_class = UserListSerializer
+#     permission_classes = (IsAuthenticated,)
+#
+#     def get(self, request):
+#         # user = request.user
+#         # if user.role != 1:
+#         #     response = {
+#         #         'success': False,
+#         #         'status_code': status.HTTP_403_FORBIDDEN,
+#         #         'message': 'You are not authorized to perform this action'
+#         #     }
+#         #     return Response(response, status.HTTP_403_FORBIDDEN)
+#         # else:
+#
+#         users = User.objects.all()
+#         serializer = self.serializer_class(users, many=True)
+#         response = {
+#             'success': True,
+#             'status_code': status.HTTP_200_OK,
+#             'message': 'Successfully fetched users',
+#             'users': serializer.data
+#
+#         }
+#         return Response(response, status=status.HTTP_200_OK)
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
     serializer_class = UserListSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated)
 
-    def get(self, request):
-        # user = request.user
-        # if user.role != 1:
-        #     response = {
-        #         'success': False,
-        #         'status_code': status.HTTP_403_FORBIDDEN,
-        #         'message': 'You are not authorized to perform this action'
-        #     }
-        #     return Response(response, status.HTTP_403_FORBIDDEN)
-        # else:
-
-        users = User.objects.all()
-        serializer = self.serializer_class(users, many=True)
-        response = {
-            'success': True,
-            'status_code': status.HTTP_200_OK,
-            'message': 'Successfully fetched users',
-            'users': serializer.data
-
-        }
-        return Response(response, status=status.HTTP_200_OK)
+    # def list(self, request):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
+    #
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     print(request.user)
+    #     return Response(serializer.data)

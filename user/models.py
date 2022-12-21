@@ -25,26 +25,6 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def save(self, *args, **kwargs):
-        if not self.pk:
+        if not self.pk and not self.is_superuser:
             self.role = self.base_role
-            return super().save(*args, **kwargs)
-
-
-# class CustomerManager(BaseUserManager):
-#     def get_queryset(self, *args, **kwargs):
-#         result = super().get_queryset(*args, **kwargs)
-#         return result.filter(role=User.Role.CUSTOMER)
-
-
-class Customer(User):
-    base_role = User.Role.CUSTOMER
-
-#
-# class SupportManager(BaseUserManager):
-#     def get_queryset(self, *args, **kwargs):
-#         result = super().get_queryset(*args, **kwargs)
-#         return result.filter(role=User.Role.SUPPORT)
-
-
-class Support(User):
-    base_role = User.Role.SUPPORT
+        return super().save(*args, **kwargs)
