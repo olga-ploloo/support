@@ -39,15 +39,13 @@ class TicketViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        # make notice for support
+
         return Response(serializer.data)
 
     def perform_create(self, serializer):
         instance = serializer.save()
+        # make notice for support
 
-        # call notification function
-        # send_notification(instance)
-        # send_notification_task.delay(instance.id)
 
     # only support
     def update(self, request, *args, **kwargs):

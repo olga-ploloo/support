@@ -5,9 +5,9 @@ from django.db import models
 # Create your models here.
 class Ticket(models.Model):
     class TicketStatus(models.TextChoices):
-        SOLVED = 'solved'
-        UNSOLVED = 'unsolved'
-        FROZEN = 'frozen'
+        SOLVED = 'SOLVED'
+        UNSOLVED = 'UNSOLVED'
+        FROZEN = 'FROZEN'
 
     title = models.CharField(max_length=100, blank=True)
     author = models.ForeignKey(
