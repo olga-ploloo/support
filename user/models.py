@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 from user.managers import CustomUserManager
 
+
 class User(AbstractUser):
     # что если я потом захочу добвать еще одного типа пользователя?
     class Role(models.TextChoices):

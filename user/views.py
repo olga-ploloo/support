@@ -1,7 +1,4 @@
-
 # from .permissions import IsSupport
-
-
 
 
 from rest_framework import status, viewsets
@@ -9,11 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from .serializers import (
-    UserRegistrationSerializer,
-    UserLoginSerializer,
-    UserListSerializer
-)
+from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserListSerializer
 
 from .models import User
 
@@ -97,7 +90,7 @@ class UserLoginView(APIView):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
 
     # def list(self, request):
     #     queryset = self.filter_queryset(self.get_queryset())

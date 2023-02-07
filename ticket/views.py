@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.http import HttpResponse
 from rest_framework.response import Response
-
+from .tasks import send_email
 from user.permissions import IsSupport, IsCustomer
 from .models import Ticket
 from .serializers import TicketSerializer
@@ -27,7 +27,6 @@ class TicketViewSet(viewsets.ModelViewSet):
     def get_own_tickets(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-
     # def get_permissions(self):
     #     if self.action == 'create':
     #         permission_classes = [IsCustomer]
@@ -43,6 +42,13 @@ class TicketViewSet(viewsets.ModelViewSet):
         # make notice for support
         return Response(serializer.data)
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+
+        # call notification function
+        # send_notification(instance)
+        # send_notification_task.delay(instance.id)
+
     # only support
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -50,11 +56,9 @@ class TicketViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(instance, data=data_to_change, partial=True)
         if serializer.is_valid():
             self.perform_update(serializer)
-        send_mail(
-            'Subject here',
-            'Here is the message.',
-            'from@example.com',
-            ['to@example.com'],
-            fail_silently=False,
-        )
+
         return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        ticket = serializer.save()
+        send_email.delay(ticket.id)
