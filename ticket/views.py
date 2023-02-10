@@ -15,7 +15,6 @@ from rest_framework import viewsets
 class TicketViewSet(viewsets.ModelViewSet):
     queryset = Ticket.objects.prefetch_related('messages')
     serializer_class = TicketSerializer
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         if self.request.user and self.action == 'get_own_tickets':
@@ -25,23 +24,22 @@ class TicketViewSet(viewsets.ModelViewSet):
     # only customer
     @action(methods=["get"], detail=False, url_path="own_tickets", url_name="own_tickets")
     def get_own_tickets(self, request, *args, **kwargs):
+        print(self.action)
         return self.list(request, *args, **kwargs)
 
     def get_permissions(self):
         permission_classes = [IsAuthenticated]
-        if self.action == 'create':
+        if self.action in ['create', 'get_own_tickets']:
             permission_classes = [IsCustomer, IsAuthenticated]
-        if self.action == 'list':
+        if self.action in ['list', 'update']:
             permission_classes = [IsAuthenticated, IsSupport]
-        print(permission_classes)
+        # print(permission_classes)
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
         instance = serializer.save(author=self.request.user)
         # make notice for support
 
-
-    # only support
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         data_to_change = {'status': request.data.get("status")}

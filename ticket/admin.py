@@ -7,4 +7,4 @@ from .models import Ticket
 class TicketAdmin(admin.ModelAdmin):
     # fields = ['role']
     # pass
-    list_display = ['status', 'updated_at']
+    list_display = ['id', 'author', 'status', 'updated_at']
