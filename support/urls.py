@@ -33,11 +33,8 @@ router.register('messages', MessageViewSet, basename='message')
 
 schema_view = get_schema_view(
     openapi.Info(
-
         title="Support API",
-
         default_version='v1',
-
         description="Test description",
     ),
     public=True,

@@ -27,23 +27,17 @@ class TicketViewSet(viewsets.ModelViewSet):
     def get_own_tickets(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-    # def get_permissions(self):
-    #     if self.action == 'create':
-    #         permission_classes = [IsCustomer]
-    #     else:
-    #         permission_classes = [IsAuthenticated]
-    #     return [permission() for permission in permission_classes]
-
-    # only customer
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        return Response(serializer.data)
+    def get_permissions(self):
+        permission_classes = [IsAuthenticated]
+        if self.action == 'create':
+            permission_classes = [IsCustomer, IsAuthenticated]
+        if self.action == 'list':
+            permission_classes = [IsAuthenticated, IsSupport]
+        print(permission_classes)
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
-        instance = serializer.save()
+        instance = serializer.save(author=self.request.user)
         # make notice for support
 
 
