@@ -8,7 +8,6 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        # fields = ('author', 'status', 'description', 'messages')
         fields = '__all__'
         extra_kwargs = {
             'description': {

@@ -24,16 +24,14 @@ class TicketViewSet(viewsets.ModelViewSet):
     # only customer
     @action(methods=["get"], detail=False, url_path="own_tickets", url_name="own_tickets")
     def get_own_tickets(self, request, *args, **kwargs):
-        print(self.action)
         return self.list(request, *args, **kwargs)
 
-    def get_permissions(self):
+    def get_permissions(self) -> list:
         permission_classes = [IsAuthenticated]
         if self.action in ['create', 'get_own_tickets']:
-            permission_classes = [IsCustomer, IsAuthenticated]
+            permission_classes = [IsAuthenticated, IsCustomer]
         if self.action in ['list', 'update']:
             permission_classes = [IsAuthenticated, IsSupport]
-        # print(permission_classes)
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):

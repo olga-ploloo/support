@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import  Message
+from .models import Message
 from .serializers import MessageSerializer
 
 from rest_framework import viewsets
