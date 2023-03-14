@@ -1,12 +1,11 @@
+from django.contrib.auth.password_validation import validate_password
+
 from .models import User
 from . import services
 from rest_framework import serializers
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True,
-                                     # validators=[validate_password]
-                                     )
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
@@ -22,6 +21,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 {'required': True},
             'email':
                 {'required': True},
+            'password':
+                {
+                    'required': True,
+                    'write_only': True,
+                    # 'validators': [validate_password]
+                }
         }
 
     def create(self, validated_data):
@@ -35,16 +40,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=128, write_only=True)
     access = serializers.CharField(read_only=True)
     refresh = serializers.CharField(read_only=True)
     role = serializers.CharField(read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('email', 'password', 'refresh', 'access', 'role')
 
     def create(self, data):
         return services.authenticate_user(data)
