@@ -1,34 +1,21 @@
-# from .permissions import IsSupport
-
-
 from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
 from .serializers import UserRegistrationSerializer, UserLoginSerializer, UserListSerializer
-
 from .models import User
 
 
-class UserRegistrationView(APIView):
+class UserRegistrationViewSet(viewsets.ViewSet):
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
 
-    def post(self, request):
+    def create(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             serializer.save()
-            status_code = status.HTTP_201_CREATED
-
-            response = {
-                'success': True,
-                'statusCode': status_code,
-                'message': 'User successfully registered!',
-                'user': serializer.data
-            }
-
-            return Response(response, status=status_code)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLoginView(APIView):

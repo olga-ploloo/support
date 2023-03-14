@@ -7,17 +7,35 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True,
+                                     # validators=[validate_password]
+                                     )
+    password2 = serializers.CharField(write_only=True, required=True)
+
     class Meta:
         model = User
         fields = (
+            'username',
             'email',
             'password',
-            'username'
+            'password2'
         )
+        extra_kwargs = {
+            'username':
+                {'required': True},
+            'email':
+                {'required': True},
+        }
 
     def create(self, validated_data):
+        validated_data.pop('password2')
         auth_user = User.objects.create_user(**validated_data)
         return auth_user
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
 
 
 class UserLoginSerializer(serializers.Serializer):
@@ -27,27 +45,22 @@ class UserLoginSerializer(serializers.Serializer):
     refresh = serializers.CharField(read_only=True)
     role = serializers.CharField(read_only=True)
 
-    def create(self, validated_date):
-        pass
+    class Meta:
+        model = User
 
-    def update(self, instance, validated_data):
-        pass
 
     def validate(self, data):
-        email = data['email']
-        password = data['password']
-        user = authenticate(email=email, password=password)
-
+        user = authenticate(
+            email=data['email'],
+            password=data['password']
+        )
         if user is None:
             raise serializers.ValidationError("Invalid login credentials")
-
         try:
             refresh = RefreshToken.for_user(user)
             refresh_token = str(refresh)
             access_token = str(refresh.access_token)
-
             update_last_login(None, user)
-
             validation = {
                 'access': access_token,
                 'refresh': refresh_token,

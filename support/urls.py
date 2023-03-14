@@ -24,12 +24,8 @@ from drf_yasg import openapi
 
 from message.views import MessageViewSet
 from ticket.views import TicketViewSet
-from user.views import UserRegistrationView, UserLoginView, UserViewSet
+from user.views import UserLoginView, UserViewSet, UserRegistrationViewSet
 
-router = DefaultRouter()
-router.register('tickets', TicketViewSet, basename='ticket')
-router.register('users', UserViewSet, basename='user')
-router.register('messages', MessageViewSet, basename='message')
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -40,21 +36,20 @@ schema_view = get_schema_view(
     public=True,
 )
 
+
+router = DefaultRouter()
+router.register('register', UserRegistrationViewSet, basename='register')
+router.register('tickets', TicketViewSet, basename='ticket')
+router.register('users', UserViewSet, basename='user')
+router.register('messages', MessageViewSet, basename='message')
+
+
+
 urlpatterns = [
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    # path('schema', get_schema_view(
-    #     title="Support API",
-    #     description="Test description",
-    #     version='v1',
-    # ), name='api-schema'),
-    # path('v1/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('register', UserRegistrationView.as_view(), name='register'),
+    # path('register', UserRegistrationView.as_view(), name='register'),
     path('login', UserLoginView.as_view(), name='login'),
-    # path('auth/', include('djoser.urls')),
-    # path('auth/', include('djoser.urls.jwt')),
-    # path('api/user/', include('user.urls')),
-    # path('api/ticket/', include('ticket.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
