@@ -1,9 +1,6 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import update_last_login
-
 from .models import User
+from . import services
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -38,7 +35,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
 
-class UserLoginSerializer(serializers.Serializer):
+class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(max_length=128, write_only=True)
     access = serializers.CharField(read_only=True)
@@ -47,30 +44,10 @@ class UserLoginSerializer(serializers.Serializer):
 
     class Meta:
         model = User
+        fields = ('email', 'password', 'refresh', 'access', 'role')
 
-
-    def validate(self, data):
-        user = authenticate(
-            email=data['email'],
-            password=data['password']
-        )
-        if user is None:
-            raise serializers.ValidationError("Invalid login credentials")
-        try:
-            refresh = RefreshToken.for_user(user)
-            refresh_token = str(refresh)
-            access_token = str(refresh.access_token)
-            update_last_login(None, user)
-            validation = {
-                'access': access_token,
-                'refresh': refresh_token,
-                'email': user.email,
-                'role': user.role,
-            }
-
-            return validation
-        except User.DoesNotExist:
-            raise serializers.ValidationError("Invalid login credentials")
+    def create(self, data):
+        return services.authenticate_user(data)
 
 
 class UserListSerializer(serializers.ModelSerializer):
