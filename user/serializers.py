@@ -1,8 +1,5 @@
 from django.contrib.auth import authenticate
-from django.contrib.auth.password_validation import validate_password
-
 from .models import User
-from . import services
 from rest_framework import serializers
 
 
@@ -48,7 +45,7 @@ class UserLoginSerializer(serializers.Serializer):
     refresh = serializers.CharField(read_only=True)
     role = serializers.CharField(read_only=True)
 
-    def validate(self, data):
+    def validate(self, data) -> list:
         user = authenticate(
             email=data['email'],
             password=data['password']

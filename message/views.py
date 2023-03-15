@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from rest_framework.viewsets import GenericViewSet
+
 from .models import Message
 from .serializers import MessageSerializer
 
-from rest_framework import viewsets
+from rest_framework import mixins
 
 
-class MessageViewSet(viewsets.ModelViewSet):
+class MessageViewSet(mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.ListModelMixin,
+                     GenericViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer

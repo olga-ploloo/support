@@ -1,17 +1,22 @@
-from django.core.mail import send_mail
-from django.db.models import Prefetch
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+from rest_framework import  mixins
+
 from .tasks import send_email
 from user.permissions import IsSupport, IsCustomer
 from .models import Ticket
 from .serializers import TicketSerializer
 
-from rest_framework import viewsets
 
 
-class TicketViewSet(viewsets.ModelViewSet):
+
+class TicketViewSet(mixins.CreateModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.ListModelMixin,
+                    GenericViewSet):
     queryset = Ticket.objects.prefetch_related('messages')
     serializer_class = TicketSerializer
 
@@ -31,6 +36,7 @@ class TicketViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated, IsCustomer]
         if self.action in ['list', 'update']:
             permission_classes = [IsAuthenticated, IsSupport]
+
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
@@ -39,6 +45,7 @@ class TicketViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
+        print(request.data)
         data_to_change = {'status': request.data.get("status")}
         serializer = self.serializer_class(instance, data=data_to_change, partial=True)
         if serializer.is_valid():

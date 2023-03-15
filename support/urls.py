@@ -24,13 +24,12 @@ from drf_yasg import openapi
 
 from message.views import MessageViewSet
 from ticket.views import TicketViewSet
-from user.views import UserViewSet, UserRegistrationViewSet, UserLoginViewSet
-
-
+from user.views import UserViewSet, UserRegistrationViewSet, UserLoginViewSet, UserLogoutView
 
 router = DefaultRouter()
 router.register('register', UserRegistrationViewSet, basename='register')
 router.register('login', UserLoginViewSet, basename='login')
+router.register('logout', UserLogoutView, basename='logout')
 router.register('tickets', TicketViewSet, basename='ticket')
 router.register('users', UserViewSet, basename='user')
 router.register('messages', MessageViewSet, basename='message')
@@ -48,8 +47,6 @@ schema_view = get_schema_view(
 urlpatterns = [
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('admin/', admin.site.urls),
-    # path('register', UserRegistrationView.as_view(), name='register'),
-    # path('login', UserLoginView.as_view(), name='login'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
