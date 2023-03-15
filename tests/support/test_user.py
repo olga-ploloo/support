@@ -32,4 +32,4 @@ def test_login_user():
         password='testpassword',
         email='testemail1@test.com',
     ))
-    assert response.status_code == 201
+    assert response.status_code == 200

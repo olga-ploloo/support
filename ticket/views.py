@@ -2,7 +2,6 @@ from django.core.mail import send_mail
 from django.db.models import Prefetch
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.http import HttpResponse
 from rest_framework.response import Response
 from .tasks import send_email
 from user.permissions import IsSupport, IsCustomer

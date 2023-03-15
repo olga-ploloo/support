@@ -26,14 +26,6 @@ from message.views import MessageViewSet
 from ticket.views import TicketViewSet
 from user.views import UserViewSet, UserRegistrationViewSet, UserLoginViewSet
 
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Support API",
-        default_version='v1',
-        description="Test description",
-    ),
-    public=True,
-)
 
 
 router = DefaultRouter()
@@ -43,6 +35,14 @@ router.register('tickets', TicketViewSet, basename='ticket')
 router.register('users', UserViewSet, basename='user')
 router.register('messages', MessageViewSet, basename='message')
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Support API",
+        default_version='v1',
+        description="Test description",
+    ),
+    public=True,
+)
 
 
 urlpatterns = [

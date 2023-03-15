@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
 from .models import User
@@ -47,8 +48,15 @@ class UserLoginSerializer(serializers.Serializer):
     refresh = serializers.CharField(read_only=True)
     role = serializers.CharField(read_only=True)
 
-    def create(self, data):
-        return services.authenticate_user(data)
+    def validate(self, data):
+        user = authenticate(
+            email=data['email'],
+            password=data['password']
+        )
+        if not user:
+            raise serializers.ValidationError('Invalid credentials')
+        data['user'] = user
+        return data
 
 
 class UserListSerializer(serializers.ModelSerializer):
