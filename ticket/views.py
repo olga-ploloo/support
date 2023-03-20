@@ -2,14 +2,12 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
-from rest_framework import  mixins
+from rest_framework import mixins
 
 from .tasks import send_email
 from user.permissions import IsSupport, IsCustomer
 from .models import Ticket
 from .serializers import TicketSerializer
-
-
 
 
 class TicketViewSet(mixins.CreateModelMixin,

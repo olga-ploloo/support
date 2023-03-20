@@ -14,7 +14,7 @@ class Ticket(models.Model):
         get_user_model(),
         null=True,
         blank=True,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='tickets'
     )
     status = models.CharField(
@@ -25,9 +25,6 @@ class Ticket(models.Model):
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    # created_at = models.DateTimeField('created at', auto_now_add=True)
-    # updated_at = models.DateTimeField('updated at', auto_now=True)
 
     class Meta:
         ordering = ['created_at']
