@@ -43,7 +43,6 @@ class TicketViewSet(mixins.CreateModelMixin,
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        print(request.data)
         data_to_change = {'status': request.data.get("status")}
         serializer = self.serializer_class(instance, data=data_to_change, partial=True)
         if serializer.is_valid():

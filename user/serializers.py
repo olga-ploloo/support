@@ -4,6 +4,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .models import User
 from rest_framework import serializers
 
+from .utils import add_token_to_blacklist
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True, required=True)
@@ -61,15 +63,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserLogoutSerialiser(serializers.Serializer):
     refresh = serializers.CharField()
 
-    def validate(self, data):
-        self.token = data['refresh']
-        return data
-
-    def save(self, **kwargs):
-        try:
-            RefreshToken(self.token).blacklist()
-        except TokenError as error:
-            raise serializers.ValidationError(str(error))
+    # def validate(self, data):
+    #     self.token = data['refresh']
+    #     return data
+    #
+    # def save(self, **kwargs):
+    #     add_token_to_blacklist(self.token)
+    # try:
+    #     RefreshToken(self.token).blacklist()
+    # except TokenError as error:
+    #     raise serializers.ValidationError(str(error))
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -85,6 +88,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['username'] = user.username
+        token['role'] = user.role
 
         return token
