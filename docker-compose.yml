@@ -8,11 +8,20 @@ services:
     env_file: .env
     ports:
       - "5432:5432"
-  web:
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6380:6380"
+    volumes:
+      - redis_data:/app
+
+  app:
     build:
       context: .
     command: >
       sh -c "python manage.py migrate &&
+             python manage.py wait_for_db &&
              python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
@@ -21,5 +30,20 @@ services:
       - .:/app
     depends_on:
       - postgres
+      - redis
+
+  celery:
+    restart: always
+    build:
+      context: .
+    command: celery -A support.celery worker -l info
+    volumes:
+      - celery_data:/app
+    depends_on:
+      - redis
+      - app
+
 volumes:
   postgres_data:
+  redis_data:
+  celery_data:
