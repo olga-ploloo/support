@@ -22,8 +22,7 @@ class BlacklistTokenMiddleware:
                     status=error.status_code,
                     content=json.dumps(
                         {
-                            'code': error.code,
-                            'content': error.detail
+                            'detail': error.detail,
                         }
                     )
                 )
