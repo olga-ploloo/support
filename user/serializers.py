@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .models import User
 from rest_framework import serializers
 
-from .utils import add_token_to_blacklist
+from .utils.connection import add_token_to_blacklist
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

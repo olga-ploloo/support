@@ -6,7 +6,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenViewBase
 
 from .serializers import MyTokenObtainPairSerializer, UserLogoutSerialiser
-from .utils import add_token_to_blacklist
+from .utils.connection import add_token_to_blacklist
 
 
 class UserLogoutView(GenericAPIView):
