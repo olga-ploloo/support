@@ -1,10 +1,7 @@
-import json
+from django.http import JsonResponse
 
-from django.http import JsonResponse, HttpResponse
-from rest_framework.response import Response
-
-from user.utils.connection import get_redis_client
 from user.exections import BlacklistedTokenException
+from user.services import check_blacklisted_token, get_token_from_header
 
 
 class BlacklistTokenMiddleware:
@@ -12,25 +9,14 @@ class BlacklistTokenMiddleware:
         self._get_response = get_response
 
     def __call__(self, request):
-        raw_token = request.headers.get("Authorization", None)
-        if raw_token:
-            try:
-                token = (raw_token.split()[1])
-                self.check_blacklisted_token(token)
-            except BlacklistedTokenException as error:
-                return HttpResponse(
-                    status=error.status_code,
-                    content=json.dumps(
-                        {
-                            'detail': error.detail,
-                        }
-                    )
-                )
+        try:
+            token = get_token_from_header(request)
+            check_blacklisted_token(token)
+        except BlacklistedTokenException as error:
+            return JsonResponse(
+                status=error.status_code,
+                data={'detail': error.detail}
+            )
 
         response = self._get_response(request)
         return response
-
-    def check_blacklisted_token(self, token):
-        redis_client = get_redis_client()
-        if redis_client.sismember('blacklisted_jwt_tokens', token):
-            raise BlacklistedTokenException()
