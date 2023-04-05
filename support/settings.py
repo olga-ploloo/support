@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework',
     'rest_framework_simplejwt',
-    # 'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'django_redis',
 ]
@@ -59,7 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'user.middleware.jwt_blacklist.BlacklistTokenMiddleware'
+    'user.middleware.jwt_blacklist.BlacklistTokenMiddleware',
+    'core.middleware.process.Process500Middleware'
 ]
 
 ROOT_URLCONF = 'support.urls'
