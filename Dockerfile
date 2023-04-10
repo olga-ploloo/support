@@ -8,12 +8,13 @@ ENV DOCKER 1
 # setting work directory
 WORKDIR /app
 
-RUN pip install --upgrade pip
+RUN pip install poetry
 
-COPY ./requirements.txt /app
+COPY pyproject.toml poetry.lock /app/
 
 # install dependencies
-RUN pip install -r requirements.txt
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-interaction --no-ansi
 
 COPY . /app
 
