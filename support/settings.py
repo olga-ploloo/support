@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'django_redis',
+    # 'social_django',
 ]
 
 MIDDLEWARE = [
@@ -198,17 +199,6 @@ CACHES = {
     }
 }
 
-JWT_BLACKLIST_TOKENS_CACHE_ALIAS = "jwt_blacklist_tokens"
-JWT_BLACKLIST_TOKENS_CACHE_KEY_PREFIX = "jwt_blacklist_token_"
-JWT_BLACKLIST_TOKENS_CACHE_TIMEOUT = 3600 * 24  # 24 часа
-CACHES[JWT_BLACKLIST_TOKENS_CACHE_ALIAS] = {
-    "BACKEND": "django_redis.cache.RedisCache",
-    "LOCATION": "redis://redis:6379/4",
-    "OPTIONS": {
-        "CLIENT_CLASS": "django_redis.client.DefaultClient",
-    },
-}
-
 AUTH_USER_MODEL = 'user.User'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
@@ -219,8 +209,4 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-# JWT token blacklist settings
-JWT_BLACKLIST_ENABLE = True
-JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']
-JWT_BLACKLIST_REDIS_PREFIX = 'blacklist:token:'
-JWT_BLACKLIST_REDIS_EXPIRATION = 3600
+JWT_BLACKLIST_REDIS_EXPIRATION = 3600 * 24

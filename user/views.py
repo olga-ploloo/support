@@ -1,19 +1,18 @@
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenViewBase
 
 from .serializers import MyTokenObtainPairSerializer, UserLogoutSerialiser
-from .utils.connection import add_token_to_blacklist
+from .services import add_token_to_blacklist
 
 
 class UserLogoutView(GenericAPIView):
     serializer_class = UserLogoutSerialiser
     queryset = []
-
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         token = request.headers.get("Authorization", None)
