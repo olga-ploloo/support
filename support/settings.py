@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'user.middleware.jwt_blacklist.BlacklistTokenMiddleware',
-    'core.middleware.process.Process500Middleware'
+    # 'core.middleware.process.Process500Middleware'
 ]
 
 ROOT_URLCONF = 'support.urls'

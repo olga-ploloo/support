@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 
-# Create your models here.
 class Ticket(models.Model):
     class TicketStatus(models.TextChoices):
         SOLVED = 'SOLVED'
@@ -12,8 +11,6 @@ class Ticket(models.Model):
     title = models.CharField(max_length=100, blank=True)
     author = models.ForeignKey(
         get_user_model(),
-        null=True,
-        blank=True,
         on_delete=models.CASCADE,
         related_name='tickets'
     )

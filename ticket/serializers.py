@@ -5,6 +5,7 @@ from .models import Ticket
 
 class TicketSerializer(serializers.ModelSerializer):
     messages = serializers.StringRelatedField(many=True, read_only=True)
+    author = serializers.CharField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Ticket
