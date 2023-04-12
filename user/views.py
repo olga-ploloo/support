@@ -1,3 +1,4 @@
+from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -7,8 +8,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenViewBase
 
 from .serializers import MyTokenObtainPairSerializer, UserLogoutSerialiser
 from .services import add_token_to_blacklist
-
-from djoser.views import UserViewSet
 
 
 class UserLogoutView(GenericAPIView):

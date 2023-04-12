@@ -1,9 +1,8 @@
+from rest_framework import mixins
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Message
 from .serializers import MessageSerializer
-
-from rest_framework import mixins
 
 
 class MessageViewSet(mixins.CreateModelMixin,

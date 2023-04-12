@@ -1,6 +1,8 @@
 import os
+
 import django
 from celery import Celery
+
 # from ticket.tasks import SCHEDULE as TICKET_SCHEDULE
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'support.settings')
