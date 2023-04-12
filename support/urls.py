@@ -22,7 +22,7 @@ from drf_yasg import openapi
 
 from message.views import MessageViewSet
 from ticket.views import TicketViewSet
-from user.views import MyTokenObtainPairView, UserLogoutView
+from user.views import MyTokenObtainPairView, UserLogoutView, ActivateUser
 
 router = DefaultRouter()
 router.register('tickets', TicketViewSet, basename='ticket')
@@ -38,10 +38,11 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                  path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-                  path('admin/', admin.site.urls),
-                  path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-                  path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-                  path('logout', UserLogoutView.as_view(), name='logout'),
-                  path('auth/', include('djoser.urls')),
+                path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+                path('admin/', admin.site.urls),
+                path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+                path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+                path('logout', UserLogoutView.as_view(), name='logout'),
+                path('auth/', include('djoser.urls')),
+                path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
               ] + router.urls
