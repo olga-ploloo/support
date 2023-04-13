@@ -1,6 +1,6 @@
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -15,6 +15,7 @@ class TicketViewSet(mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,
                     mixins.ListModelMixin,
+                    mixins.DestroyModelMixin,
                     GenericViewSet):
     queryset = Ticket.objects.prefetch_related('messages')
     serializer_class = TicketSerializer
@@ -31,15 +32,15 @@ class TicketViewSet(mixins.CreateModelMixin,
 
     def get_permissions(self) -> list:
         permission_classes = [IsAuthenticated]
-        if self.action in ['create', 'get_own_tickets']:
-            permission_classes = [IsAuthenticated, IsCustomer]
+        if self.action in ['create', 'get_own_tickets', 'destroy']:
+            permission_classes = [IsAuthenticated, IsCustomer, IsAdminUser]
         if self.action in ['list', 'update']:
-            permission_classes = [IsAuthenticated, IsSupport]
+            permission_classes = [IsAuthenticated, IsSupport, IsAdminUser]
 
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
-        instance = serializer.save(author=self.request.user)
+        instance = serializer.save()
         # make notice for support
 
     def update(self, request, *args, **kwargs):
@@ -54,3 +55,14 @@ class TicketViewSet(mixins.CreateModelMixin,
     def perform_update(self, serializer):
         ticket = serializer.save()
         send_email.delay(ticket.id)
+
+    # only owner of ticket or admin can delete ticket
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if self.request.user == instance.author or self.request.user.is_staff:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={'detail': 'You do not have permission to perform this action.'}
+        )
