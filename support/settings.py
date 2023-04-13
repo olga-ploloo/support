@@ -144,6 +144,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10
 }
 
 SIMPLE_JWT = {
@@ -188,7 +190,6 @@ DJOSER = {
         'user': 'user.serializers.UserListSerializer',
     },
 }
-
 
 AUTH_USER_MODEL = 'user.User'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
