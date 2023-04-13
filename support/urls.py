@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_yasg import openapi
@@ -38,11 +40,15 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-                path('admin/', admin.site.urls),
-                path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-                path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-                path('logout', UserLogoutView.as_view(), name='logout'),
-                path('auth/', include('djoser.urls')),
-                path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
+                  path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+                  path('admin/', admin.site.urls),
+                  path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+                  path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+                  path('logout', UserLogoutView.as_view(), name='logout'),
+                  path('auth/', include('djoser.urls')),
+                  path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
               ] + router.urls
+
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT)

@@ -7,16 +7,12 @@ from .models import Message
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    ticket = serializers.PrimaryKeyRelatedField(
-        queryset=Ticket.objects.all(),
-        many=False)
-    author = serializers.CharField(
-        default=serializers.CurrentUserDefault()
-    )
+    ticket = serializers.PrimaryKeyRelatedField(queryset=Ticket.objects.all(), many=False)
+    author = serializers.CharField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Message
-        fields = ('ticket', 'author', 'message', 'created_at', 'ticket')
+        fields = '__all__'
         extra_kwargs = {
             'message': {
                 'required': True,

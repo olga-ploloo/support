@@ -19,12 +19,13 @@ class Ticket(models.Model):
         choices=TicketStatus.choices,
         default=TicketStatus.UNSOLVED
     )
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=False)
+    image = models.ImageField(upload_to='ticket', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f'{self.status} - {self.created_at.strftime("%Y-%m-%d%H:%M:%S")}'
