@@ -8,7 +8,7 @@ from user.permissions import IsCustomer, IsSupport
 
 from .models import Ticket
 from .serializers import TicketSerializer
-from .services import status_update_notification, new_ticket_creeate_notification
+from .services import status_update_notification, new_ticket_create_notification
 
 
 class TicketViewSet(mixins.CreateModelMixin,
@@ -49,7 +49,7 @@ class TicketViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new ticket."""
         instance = serializer.save()
-        new_ticket_creeate_notification(instance)
+        new_ticket_create_notification(instance)
 
     def update(self, request, *args, **kwargs) -> Response:
         """Update only ticket status. Allowed only for support services."""
