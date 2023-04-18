@@ -27,3 +27,6 @@ class User(AbstractUser):
         if not self.pk and not self.is_superuser:
             self.role = self.base_role
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.username
