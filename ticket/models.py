@@ -12,12 +12,20 @@ class Ticket(models.Model):
     author = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
-        related_name='tickets'
+        related_name='tickets_from_customer'
     )
     status = models.CharField(
         max_length=8,
         choices=TicketStatus.choices,
         default=TicketStatus.UNSOLVED
+    )
+    is_assign = models.BooleanField(default=False)
+    assigned_support = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='tickets_by_support'
     )
     description = models.TextField(blank=False)
     image = models.ImageField(upload_to='ticket', blank=True, null=True)

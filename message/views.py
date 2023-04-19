@@ -20,7 +20,6 @@ class MessageViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new message from customer."""
         instance = serializer.save()
-        # проверить роль и если customer ->
         customer_created_message_notification(instance)
 
     def destroy(self, request, *args, **kwargs) -> Response:
@@ -29,6 +28,7 @@ class MessageViewSet(mixins.CreateModelMixin,
         if self.request.user == instance.author or self.request.user.is_staff:
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
+
         return Response(
             status=status.HTTP_403_FORBIDDEN,
             data={'detail': 'You do not have permission to perform this action.'}

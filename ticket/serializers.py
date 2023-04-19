@@ -15,3 +15,9 @@ class TicketSerializer(serializers.ModelSerializer):
                 'required': True,
             },
         }
+
+
+class AssignTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['id', 'is_assign', 'assigned_support']

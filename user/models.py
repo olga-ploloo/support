@@ -30,3 +30,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def is_support(self):
+        return self.role == User.Role.SUPPORT

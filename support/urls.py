@@ -20,14 +20,15 @@ from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from message.views import MessageViewSet
-from ticket.views import TicketViewSet
+from ticket.views import TicketViewSet, AssignTicketViewSet
 from user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
 router = DefaultRouter()
 router.register('tickets', TicketViewSet, basename='ticket')
+router.register('assign_ticket', AssignTicketViewSet, basename='assign_ticket')
 router.register('messages', MessageViewSet, basename='message')
 
 schema_view = get_schema_view(
