@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from user.exections import BlacklistedTokenException, InvalidHeadersException
+from user.exceptions import BlacklistedTokenException, InvalidHeadersException
 from user.utils.connection import get_redis_client
 
 
