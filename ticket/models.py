@@ -19,14 +19,6 @@ class Ticket(models.Model):
         choices=TicketStatus.choices,
         default=TicketStatus.UNSOLVED
     )
-    is_assign = models.BooleanField(default=False)
-    assigned_support = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name='tickets_by_support'
-    )
     description = models.TextField(blank=False)
     image = models.ImageField(upload_to='ticket', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -37,3 +29,15 @@ class Ticket(models.Model):
 
     def __str__(self):
         return f'{self.status} - {self.created_at.strftime("%Y-%m-%d%H:%M:%S")}'
+
+
+class AssignTicket(models.Model):
+    ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE, related_name='assigned_ticket')
+    is_assign = models.BooleanField(default=False)
+    assigned_support = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name='tickets_by_support'
+    )

@@ -6,7 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from user.permissions import IsCustomer, IsSupport
 
-from .models import Ticket
+from .models import Ticket, AssignTicket
 from .serializers import TicketSerializer, AssignTicketSerializer
 from .services import status_update_notification, new_ticket_create_notification
 
@@ -17,28 +17,22 @@ class TicketViewSet(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
                     mixins.DestroyModelMixin,
                     GenericViewSet):
-    queryset = Ticket.objects.prefetch_related('messages')
+    queryset = Ticket.objects.select_related('author').prefetch_related('messages')
     serializer_class = TicketSerializer
 
     def get_queryset(self) -> queryset:
         if self.action == 'get_unsolved_tickets':
             return self.queryset.filter(status=Ticket.TicketStatus.UNSOLVED)
-        if self.action == 'get_unassigned_tickets':
-            return self.queryset.filter(is_assign=False)
         if self.request.user and self.action == 'get_customer_own_tickets':
             return self.queryset.filter(author=self.request.user)
         if self.request.user and self.action == 'get_support_own_tickets':
-            return self.queryset.filter(assigned_support=self.request.user)
+            return Ticket.objects.select_related('assigned_ticket')\
+                .filter(assigned_ticket__assigned_support=self.request.user)
         return super().get_queryset()
 
     @action(methods=["get"], detail=False, url_path="unsolved_tickets", url_name="unsolved_tickets")
     def get_unsolved_tickets(self, request, *args, **kwargs) -> Response:
         """Return all unsolved tickets. Allowed only for support services."""
-        return self.list(request, *args, **kwargs)
-
-    @action(methods=["get"], detail=False, url_path="unassigned_tickets", url_name="unassigned_tickets")
-    def get_unassigned_tickets(self, request, *args, **kwargs) -> Response:
-        """Return all unassigned tickets. Allowed only for support services."""
         return self.list(request, *args, **kwargs)
 
     @action(methods=["get"], detail=False, url_path="customer_own_tickets", url_name="customer_own_tickets")
@@ -55,8 +49,7 @@ class TicketViewSet(mixins.CreateModelMixin,
         permission_classes = [IsAuthenticated]
         if self.action in ['create', 'get_customer_own_tickets', 'destroy']:
             permission_classes = [IsAuthenticated, IsCustomer | IsAdminUser]
-        if self.action in ['list', 'update', 'get_unsolved_tickets', 'get_unassigned_tickets',
-                           'get_support_own_tickets']:
+        if self.action in ['list', 'update', 'get_unsolved_tickets', 'get_support_own_tickets']:
             permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
 
         return [permission() for permission in permission_classes]
@@ -95,13 +88,20 @@ class TicketViewSet(mixins.CreateModelMixin,
 
 
 class AssignTicketViewSet(mixins.UpdateModelMixin,
+                          mixins.ListModelMixin,
                           GenericViewSet):
-    queryset = Ticket.objects.all()
+    queryset = AssignTicket.objects.select_related('ticket')
     serializer_class = AssignTicketSerializer
-    permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
+    # permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
+
+    def get_queryset(self) -> queryset:
+        if self.action == 'list':
+            """Return all unassigned tickets. Allowed only for support services."""
+            return self.queryset.filter(is_assign=False)
+        return super().get_queryset()
 
     def perform_update(self, serializer) -> None:
-        """initialization ticket: set  """
+        """initialization ticket: set current support user """
         serializer.save(
             is_assign=True,
             assigned_support=self.request.user

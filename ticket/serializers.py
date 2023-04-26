@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Ticket
+from .models import Ticket, AssignTicket
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -18,6 +18,9 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class AssignTicketSerializer(serializers.ModelSerializer):
+    ticket = serializers.StringRelatedField(many=False)
+    assigned_support = serializers.StringRelatedField(many=False)
+
     class Meta:
-        model = Ticket
-        fields = ['id', 'is_assign', 'assigned_support']
+        model = AssignTicket
+        fields = ['id', 'ticket', 'is_assign', 'assigned_support']

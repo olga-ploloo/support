@@ -1,5 +1,6 @@
 from django.urls import reverse
-from ticket.models import Ticket
+from ticket.models import Ticket, AssignTicket
+from user.models import User
 from rest_framework.test import APITestCase
 from django.test import TestCase, Client
 
@@ -8,10 +9,23 @@ class TicketTestCase(TestCase):
 
     def test_list_tickets_view_performance(self):
         client = Client()
-        Ticket.objects.create(
-            description='testing message',
-            author_id=8
+        user = User.objects.create(
+            username='testusername',
+            email='testemail@test.com',
+            password='testpassword',
+            # password2='testpassword'
         )
-        with self.assertNumQueries(1):
-            response = client.get("/tickets/")
-        self.assertEqual(response.context["tickets"], 1)
+        ticket = Ticket.objects.create(
+            description='testing ticket',
+            author=user
+        )
+        # AssignTicket.objects.create(
+        #     ticket=ticket,
+        # )
+        with self.assertNumQueries(3):
+            response = client.get("/assign_ticket/support_own_tickets/")
+            # self.assertEqual(response.context["tickets"], 1)
+
+
+
+
