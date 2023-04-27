@@ -22,9 +22,9 @@ class TicketTestCase(TestCase):
         # AssignTicket.objects.create(
         #     ticket=ticket,
         # )
-        with self.assertNumQueries(3):
-            response = client.get("/assign_ticket/support_own_tickets/")
-            # self.assertEqual(response.context["tickets"], 1)
+        with self.assertNumQueries(1):
+            response = client.get("/tickets/")
+        self.assertEqual(response.context["tickets"], 1)
 
 
 
