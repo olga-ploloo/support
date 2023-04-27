@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @pytest.fixture
@@ -12,6 +13,37 @@ def user():
     )
     user.is_active = True
     user.save()
+
+    return user
+
+
+@pytest.fixture
+def admin_user():
+    user = get_user_model().objects.create_user(
+        username='admin',
+        email='admin@admin.com',
+        password='admin',
+    )
+    user.role = 'admin'
+    user.is_staff = True
+    user.is_superuser = True
+    user.is_active = True
+    user.save()
+
+    return user
+
+
+@pytest.fixture
+def support_user():
+    user = get_user_model().objects.create_user(
+        username='support',
+        email='support@support.com',
+        password='support',
+    )
+    user.role = 'support'
+    user.is_active = True
+    user.save()
+
     return user
 
 
@@ -21,6 +53,13 @@ def client():
 
 
 @pytest.fixture
-def auth_client(user, client):
-    auth_client.login(username='testusername', password='testemail@test.com')
+def auth_client(user):
+    auth_client = APIClient()
+    token = RefreshToken.for_user(user)
+    auth_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
+
     return auth_client
+
+
+def test_activation_url():
+    pass
