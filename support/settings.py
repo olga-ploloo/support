@@ -192,7 +192,9 @@ DJOSER = {
         'user_create': 'user.serializers.UserRegistrationSerializer',
         'user': 'user.serializers.UserListSerializer',
     },
+    'HIDE_USERS': True,
 }
+# /auth/users/ post-register
 
 AUTH_USER_MODEL = 'user.User'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')

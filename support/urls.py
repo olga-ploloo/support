@@ -46,7 +46,7 @@ urlpatterns = [
                   path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
                   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
                   path('logout', UserLogoutView.as_view(), name='logout'),
-                  path('auth/', include('djoser.urls')),
+                  path('auth/', include('djoser.urls.base')),
                   path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
               ] + router.urls
 

@@ -106,3 +106,14 @@ class AssignTicketViewSet(mixins.UpdateModelMixin,
             is_assign=True,
             assigned_support=self.request.user
         )
+
+
+# from djoser.views import UserViewSet as DjoserUserViewSet
+#
+#
+# class UserViewSet(DjoserUserViewSet):
+#
+#     def get_throttles(self):
+#         if self.action == "create":
+#             self.throttle_classes = [YourThrottleClass]
+#         return super().get_throttles()
