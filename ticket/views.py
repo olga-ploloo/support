@@ -92,7 +92,7 @@ class AssignTicketViewSet(mixins.UpdateModelMixin,
                           GenericViewSet):
     queryset = AssignTicket.objects.select_related('ticket')
     serializer_class = AssignTicketSerializer
-    # permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
+    permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
 
     def get_queryset(self) -> queryset:
         if self.action == 'list':

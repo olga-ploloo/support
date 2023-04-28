@@ -18,6 +18,20 @@ def user():
 
 
 @pytest.fixture
+def client():
+    return APIClient()
+
+
+@pytest.fixture
+def auth_client(user):
+    auth_client = APIClient()
+    token = RefreshToken.for_user(user)
+    auth_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
+
+    return auth_client
+
+
+@pytest.fixture
 def admin_user():
     user = get_user_model().objects.create_user(
         username='admin',
@@ -48,18 +62,17 @@ def support_user():
 
 
 @pytest.fixture
-def client():
-    return APIClient()
+def auth_support_client(support_user, client):
+    token = RefreshToken.for_user(support_user)
+    client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
 
+    return client
 
 @pytest.fixture
-def auth_client(user):
-    auth_client = APIClient()
-    token = RefreshToken.for_user(user)
-    auth_client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
-
-    return auth_client
-
-
-def test_activation_url():
-    pass
+def test_user_payload():
+    return dict(
+        username='testusername',
+        email='testemail@test.com',
+        password='testpassword',
+        password2='testpassword'
+    )
