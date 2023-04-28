@@ -31,6 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split()
+INTERNAL_IPS = os.getenv('INTERNAL_IPS').split()
 
 # Application definition
 
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'django_redis',
+    'debug_toolbar',
     # 'social_django',
 ]
 
@@ -62,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'user.middleware.jwt_blacklist.BlacklistTokenMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'core.middleware.process.Process500Middleware'
 ]
 
@@ -195,6 +198,9 @@ DJOSER = {
     'HIDE_USERS': True,
 }
 # /auth/users/ post-register
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG}
 
 AUTH_USER_MODEL = 'user.User'
 CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
