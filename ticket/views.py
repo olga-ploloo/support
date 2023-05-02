@@ -1,14 +1,15 @@
 from rest_framework import mixins, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from user.permissions import IsCustomer, IsSupport
 
-from .models import Ticket, AssignTicket
-from .serializers import TicketSerializer, AssignTicketSerializer
-from .services import status_update_notification, new_ticket_create_notification
+from .models import AssignTicket, Ticket
+from .serializers import AssignTicketSerializer, TicketSerializer
+from .services import (new_ticket_create_notification,
+                       status_update_notification)
 
 
 class TicketViewSet(mixins.CreateModelMixin,
@@ -106,14 +107,3 @@ class AssignTicketViewSet(mixins.UpdateModelMixin,
             is_assign=True,
             assigned_support=self.request.user
         )
-
-
-# from djoser.views import UserViewSet as DjoserUserViewSet
-#
-#
-# class UserViewSet(DjoserUserViewSet):
-#
-#     def get_throttles(self):
-#         if self.action == "create":
-#             self.throttle_classes = [YourThrottleClass]
-#         return super().get_throttles()

@@ -68,6 +68,7 @@ def auth_support_client(support_user, client):
 
     return client
 
+
 @pytest.fixture
 def test_user_payload():
     return dict(

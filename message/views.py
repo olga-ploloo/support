@@ -1,7 +1,7 @@
 from rest_framework import mixins, status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
 
 from .models import Message
 from .serializers import MessageSerializer

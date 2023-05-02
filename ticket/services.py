@@ -1,7 +1,7 @@
 from django.conf import settings
-from .tasks import send_email
 
 from .models import Ticket
+from .tasks import send_email
 
 
 def status_update_notification(ticket_id):

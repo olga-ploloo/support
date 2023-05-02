@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from message.views import MessageViewSet
-from ticket.views import TicketViewSet, AssignTicketViewSet
+from ticket.views import AssignTicketViewSet, TicketViewSet
 from user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
 router = DefaultRouter()
