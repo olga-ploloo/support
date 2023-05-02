@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from ticket.models import Ticket
+
 
 @pytest.fixture
 def user():
@@ -32,19 +34,14 @@ def auth_client(user):
 
 
 @pytest.fixture
-def admin_user():
-    user = get_user_model().objects.create_user(
-        username='admin',
-        email='admin@admin.com',
-        password='admin',
+def ticket(user):
+    user = get_user_model().objects.get(email='testemail@test.com')
+    ticket = Ticket.objects.create(
+        description='test description',
+        author_id=user.id
     )
-    user.role = 'admin'
-    user.is_staff = True
-    user.is_superuser = True
-    user.is_active = True
-    user.save()
 
-    return user
+    return ticket
 
 
 @pytest.fixture

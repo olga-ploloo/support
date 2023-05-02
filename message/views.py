@@ -1,5 +1,5 @@
 from rest_framework import mixins, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -15,7 +15,13 @@ class MessageViewSet(mixins.CreateModelMixin,
                      GenericViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self) -> list:
+        permission_classes = [IsAuthenticated]
+        if self.action in ['list', 'retrieve']:
+            permission_classes = [IsAuthenticated, IsAdminUser]
+
+        return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new message from customer."""
