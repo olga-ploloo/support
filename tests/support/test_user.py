@@ -1,7 +1,6 @@
-import pytest
 import jwt
+import pytest
 from django.conf import settings
-from django.urls import reverse
 from rest_framework import status
 
 
@@ -15,10 +14,10 @@ def test_register_user(client, test_user_payload):
 
 
 @pytest.mark.django_db
-def test_user_creation_fail_if_user_with_email_exist(user, client):
+def test_user_creation_fail_if_user_with_email_exist(user, client, test_user_payload):
     payload = dict(
         username='Jon',
-        email='testemail@test.com',
+        email=test_user_payload['email'],
         password='fhfyy7frn44',
         password2='fhfyy7frn44'
     )
