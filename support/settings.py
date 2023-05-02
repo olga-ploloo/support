@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'django_redis',
-    'debug_toolbar',
     # 'social_django',
 ]
 
@@ -64,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'user.middleware.jwt_blacklist.BlacklistTokenMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'core.middleware.process.Process500Middleware'
 ]
 

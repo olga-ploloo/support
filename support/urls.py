@@ -41,21 +41,15 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-                  path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-                  path('admin/', admin.site.urls),
-                  path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-                  path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-                  path('logout/', UserLogoutView.as_view(), name='logout'),
-                  path('auth/', include('djoser.urls.base')),
-                  path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
-              ] + router.urls
+                   path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+                   path('admin/', admin.site.urls),
+                   path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+                   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+                   path('logout/', UserLogoutView.as_view(), name='logout'),
+                   path('auth/', include('djoser.urls.base')),
+                   path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
+               ] + router.urls
 
 urlpatterns += static(
     settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT)
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ]
