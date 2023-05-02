@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'django_redis',
-    # 'social_django',
 ]
 
 MIDDLEWARE = [
@@ -62,8 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'user.middleware.jwt_blacklist.BlacklistTokenMiddleware',
-    # 'core.middleware.process.Process500Middleware'
+    'core.middleware.jwt_blacklist.BlacklistTokenMiddleware',
 ]
 
 ROOT_URLCONF = 'support.urls'
@@ -195,7 +193,6 @@ DJOSER = {
     },
     'HIDE_USERS': True,
 }
-# /auth/users/ post-register
 
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG}

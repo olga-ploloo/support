@@ -26,6 +26,7 @@ class MessageViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new message from customer."""
         instance = serializer.save()
+        print(instance.author.role)
         customer_created_message_notification(instance)
 
     def destroy(self, request, *args, **kwargs) -> Response:
