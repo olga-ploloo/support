@@ -18,5 +18,5 @@ def status_update_notification(ticket_id):
     )
 
 
-def new_ticket_create_notification(instance):
+def created_new_ticket_notification(instance):
     pass

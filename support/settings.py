@@ -31,11 +31,11 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split()
-INTERNAL_IPS = os.getenv('INTERNAL_IPS').split()
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'django_redis',
+    'channels',
+    'notification',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +84,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'support.wsgi.application'
+# WSGI_APPLICATION = 'support.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -192,6 +195,16 @@ DJOSER = {
         'user': 'user.serializers.UserListSerializer',
     },
     'HIDE_USERS': True,
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": os.getenv('CHANNEL_REDIS_HOST'),
+            "symmetric_encryption_keys": os.getenv('SECRET_KEY'),
+        },
+    },
 }
 
 DEBUG_TOOLBAR_CONFIG = {

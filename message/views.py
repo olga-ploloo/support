@@ -5,7 +5,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from .models import Message
 from .serializers import MessageSerializer
-from .services import customer_created_message_notification
+from .services import created_message_notification
 
 
 class MessageViewSet(mixins.CreateModelMixin,
@@ -26,8 +26,7 @@ class MessageViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new message from customer."""
         instance = serializer.save()
-        print(instance.author.role)
-        customer_created_message_notification(instance)
+        created_message_notification(instance)
 
     def destroy(self, request, *args, **kwargs) -> Response:
         """Delete message. Allowed only for owner of message or admin."""
