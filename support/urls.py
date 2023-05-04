@@ -23,6 +23,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from message.views import MessageViewSet
+from notification.consumers import NotificationConsumer
 from ticket.views import AssignTicketViewSet, TicketViewSet
 from user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
@@ -55,5 +56,5 @@ urlpatterns += static(
     document_root=settings.MEDIA_ROOT)
 
 websocket_urlpatterns = [
-    # path(r'^ws/$', WebSocketConsumer.as_asgi()),
+    path('notification/', NotificationConsumer.as_asgi()),
 ]

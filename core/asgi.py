@@ -11,9 +11,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "support.settings")
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
-    # "websocket": AllowedHostsOriginValidator(
-    #     AuthMiddlewareStack(URLRouter(
-    #         support.urls.websocket_urlpatterns
-    #     ))
-    # )
+    "websocket": AllowedHostsOriginValidator(
+        AuthMiddlewareStack(URLRouter(
+            support.urls.websocket_urlpatterns
+        ))
+    )
 })
