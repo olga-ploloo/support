@@ -16,7 +16,3 @@ def status_update_notification(ticket_id):
         email_from,
         recipient_list,
     )
-
-
-def created_new_ticket_notification(instance):
-    pass

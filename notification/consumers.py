@@ -10,65 +10,85 @@ from django.contrib.auth.models import AnonymousUser
 from notification.models import Notification
 
 
-@database_sync_to_async
-def create_notification(receiver, typeof="ticket_created", status="unread"):
-    notification_to_create = Notification.objects.create(user_revoker=receiver, type_of_notification=typeof)
-    return (notification_to_create.user_receiver.username, notification_to_create.type_of_notification)
+# @database_sync_to_async
+# def create_notification(receiver, typeof="ticket_created", status="unread"):
+#     notification_to_create = Notification.objects.create(user_revoker=receiver, type_of_notification=typeof)
+#     return (notification_to_create.user_receiver.username, notification_to_create.type_of_notification)
+#
+#
+# @database_sync_to_async
+# def get_user(user_id):
+#     try:
+#         return get_user_model().objects.get(id=user_id)
+#     except:
+#         return AnonymousUser()
 
 
-@database_sync_to_async
-def get_user(user_id):
-    try:
-        return get_user_model().objects.get(id=user_id)
-    except:
-        return AnonymousUser()
+class TicketConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        # Получите идентификатор билета из URL
+        print('connection')
+        self.ticket_id = self.scope['url_route']['kwargs']['ticket_id']
 
+        # Создайте группу каналов для данного билета
+        await self.channel_layer.group_add(
+            self.ticket_id,
+            self.channel_name
+        )
 
-class NotificationConsumer(AsyncWebsocketConsumer):
-
-    async def websocket_connect(self, event):
-        print(self.scope)
         await self.accept()
 
-        await self.send(json.dumps({
-            "type": "websocket.send",
-            "text": "hello world"
-        }))
-        self.room_name = 'test_consumer'
-        self.room_group_name = 'test_consumer_group'
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.send({
-            "type": "websocket.send",
-            "text": "room made"
-        })
+    async def disconnect(self, close_code):
+        # Удалите соединение из группы каналов
+        await self.channel_layer.group_discard(
+            self.ticket_id,
+            self.channel_name
+        )
 
+    async def receive(self, text_data):
+        # Обработка входящих сообщений
+        pass
 
-async def websocket_receive(self, event):
-    print(event)
-    data_to_get = json.loads(event['text'])
-    user_to_get = await get_user(int(data_to_get))
-    print(user_to_get)
-    get_of = await create_notification(user_to_get)
-    self.room_group_name = 'test_consumer_group'
-    channel_layer = get_channel_layer()
-    await (channel_layer.group_send)(
-        self.room_group_name,
-        {
-            "type": "send_notification",
-            "value": json.dumps(get_of)
-        }
-    )
-    print('receive', event)
+    async def send_notification(self, event):
+        print('sended')
+        # Отправка уведомления в реальном времени
+        notification = event['notification']
 
+        # Отправить уведомление по WebSocket соединению
+        await self.send(text_data=notification)
 
-async def websocket_disconnect(self, event):
-    print('disconnect', event)
+    #
+    #     # Send message to WebSocket
+    #     await self.send(text_data=json.dumps({"message": message}))
 
+    #
+    #
+    # async def connect(self):
+    #     self.group_name = 'notification'
+    #     await self.channel_layer.group_add(self.group_name, self.channel_name)
+    #     await self.accept()
+    #
+    #
+    # async def disconnect(self, close_code):
+    #     await self.channel_layer.group_discard(
+    #         self.group_name,
+    #         self.channel_name)
+    # # вызывается когда метод получен из веб сокета
+    # async def receive(self, text_data):
+    #     text_data_json = json.loads(text_data)
+    #     message = text_data_json["message"]
+    #     event = {
+    #         'type': 'send_message',
+    #         'message': message
+    #     }
+    #
+    #     await self.channel_layer.group_send(
+    #         self.group_name,
+    #         event)
+    #
+    # async def send_notification(self, event):
+    #     message = event["message"]
+    #
+    #     # Send message to WebSocket
+    #     await self.send(text_data=json.dumps({"message": message}))
 
-async def send_notification(self, event):
-    await self.send(json.dumps({
-        "type": "websocket.send",
-        "data": event
-    }))
-    print('I am here')
-    print(event)

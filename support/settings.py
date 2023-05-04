@@ -201,8 +201,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": os.getenv('CHANNEL_REDIS_HOST'),
-            "symmetric_encryption_keys": os.getenv('SECRET_KEY'),
+            "hosts": [f"redis://{os.getenv('REDIS_HOST')}:{os.getenv('REDIS_PORT')}/4"],
+            "symmetric_encryption_keys": [os.getenv('SECRET_KEY')],
         },
     },
 }

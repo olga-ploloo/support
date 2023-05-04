@@ -16,14 +16,14 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from message.views import MessageViewSet
-from notification.consumers import NotificationConsumer
+from notification.consumers import TicketConsumer
 from ticket.views import AssignTicketViewSet, TicketViewSet
 from user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
@@ -40,21 +40,21 @@ schema_view = get_schema_view(
     ),
     public=True,
 )
+websocket_urlpatterns = [
+   path('ws/tickets/<ticket_id>/', TicketConsumer.as_asgi()),
+]
 
 urlpatterns = [
-                   path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-                   path('admin/', admin.site.urls),
-                   path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-                   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-                   path('logout/', UserLogoutView.as_view(), name='logout'),
-                   path('auth/', include('djoser.urls.base')),
-                   path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
-               ] + router.urls
+                  path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+                  path('admin/', admin.site.urls),
+                  path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+                  path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+                  path('logout/', UserLogoutView.as_view(), name='logout'),
+                  path('auth/', include('djoser.urls.base')),
+                  path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
+                  path('', include(websocket_urlpatterns)),
+              ] + router.urls
 
 urlpatterns += static(
     settings.MEDIA_URL,
     document_root=settings.MEDIA_ROOT)
-
-websocket_urlpatterns = [
-    path('notification/', NotificationConsumer.as_asgi()),
-]
