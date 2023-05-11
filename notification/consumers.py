@@ -26,16 +26,12 @@ from notification.models import Notification
 
 class TicketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        # Получите идентификатор билета из URL
         print('connection')
         self.ticket_id = self.scope['url_route']['kwargs']['ticket_id']
-
-        # Создайте группу каналов для данного билета
         await self.channel_layer.group_add(
             self.ticket_id,
             self.channel_name
         )
-
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -73,6 +69,8 @@ class TicketConsumer(AsyncWebsocketConsumer):
     #     await self.channel_layer.group_discard(
     #         self.group_name,
     #         self.channel_name)
+
+
     # # вызывается когда метод получен из веб сокета
     # async def receive(self, text_data):
     #     text_data_json = json.loads(text_data)

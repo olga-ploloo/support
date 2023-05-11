@@ -45,14 +45,14 @@ class TicketViewSet(mixins.CreateModelMixin,
         """Return list of tickets assigned to the current support service. Allowed only for support services."""
         return self.list(request, *args, **kwargs)
 
-    def get_permissions(self) -> list:
-        permission_classes = [IsAuthenticated]
-        if self.action in ['create', 'get_customer_own_tickets', 'destroy']:
-            permission_classes = [IsAuthenticated, IsCustomer | IsAdminUser]
-        if self.action in ['list', 'update', 'get_unsolved_tickets', 'get_support_own_tickets']:
-            permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
-
-        return [permission() for permission in permission_classes]
+    # def get_permissions(self) -> list:
+    #     permission_classes = [IsAuthenticated]
+    #     if self.action in ['create', 'get_customer_own_tickets', 'destroy']:
+    #         permission_classes = [IsAuthenticated, IsCustomer | IsAdminUser]
+    #     if self.action in ['list', 'update', 'get_unsolved_tickets', 'get_support_own_tickets']:
+    #         permission_classes = [IsAuthenticated, IsSupport | IsAdminUser]
+    #
+    #     return [permission() for permission in permission_classes]
 
     def update(self, request, *args, **kwargs) -> Response:
         """Update only ticket status. Allowed only for support services."""

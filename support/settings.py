@@ -52,11 +52,13 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_redis',
     'channels',
+    'corsheaders',
     'notification',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,6 +88,13 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'support.wsgi.application'
 ASGI_APPLICATION = 'core.asgi.application'
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://localhost:3000",
+]
+
+# only for tests
+# CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -150,7 +159,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 30
 }
 
 SIMPLE_JWT = {
