@@ -1,8 +1,9 @@
-import {Table} from "reactstrap";
+import moment from 'moment';
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 import ReactPaginate from 'react-paginate';
+import TextTruncate from 'react-text-truncate';
 
 const TableHeader = () => {
     return (
@@ -32,13 +33,18 @@ const TableBody = ({tickets}) => {
         ) : (
             tickets.map((ticket, index) => (
                 <tr>
-                    <td>index</td>
+                    <td >{index+1}</td>
                     <td>{ticket.id}</td>
-                    <td>{ticket.created_at}</td>
+                    <td>{moment(ticket.created_at).format('DD/MM/YYYY HH:mm:ss')}</td>
                     <td>{ticket.status}</td>
                     <td>{ticket.author}</td>
                     <td>{ticket.title}</td>
-                    <td>{ticket.description}</td>
+                    <td><TextTruncate
+                        line={1}
+                        element="span"
+                        truncateText="…"
+                        text={ticket.description}
+                    /></td>
                 </tr>
             ))
         )}
@@ -54,7 +60,6 @@ const TicketsList = () => {
     const getTickets = async (pageNumber = 1) => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/?page=${pageNumber}`);
-            console.log(response.data)
             setTickets(response.data.results);
             setPageCount(Math.ceil(response.data.count / constants.PAGINATION_PAGE_SIZE))
         } catch (error) {
