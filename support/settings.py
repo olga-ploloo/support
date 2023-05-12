@@ -93,9 +93,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
-# only for tests
-# CORS_ORIGIN_ALLOW_ALL = True
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 

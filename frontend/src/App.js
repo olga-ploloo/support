@@ -1,9 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
-import {Fragment} from "react";
-import Header from "../header/header";
-import TicketList from "../ticketsList/ticketsList"
-import Home from "../home/home";
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Header from "./components/header";
+import TicketList from "./components/ticketsList"
+import Home from "./components/home";
 
 function App() {
   return <div className="App">
