@@ -1,7 +1,8 @@
 import {Table} from "reactstrap";
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {API_URL} from "../constatns/ticketConstans";
+import * as constants from "../constatns/ticketConstans";
+import ReactPaginate from 'react-paginate';
 
 const TableHeader = () => {
     return (
@@ -47,28 +48,28 @@ const TableBody = ({tickets}) => {
 
 const TicketsList = () => {
     const [tickets, setTickets] = useState([]);
-    const [nextPageURL, setNextPageURL] = useState("");
+    const [pageCount, setPageCount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
 
+    const getTickets = async (pageNumber = 1) => {
+        try {
+            const response = await axios.get(`${constants.API_URL}/tickets/?page=${pageNumber}`);
+            console.log(response.data)
+            setTickets(response.data.results);
+            setPageCount(Math.ceil(response.data.count / constants.PAGINATION_PAGE_SIZE))
+        } catch (error) {
+            console.log(error)
+        }
+    };
 
     useEffect(() => {
-        const getTickets = async () =>{
-            try {
-                const response = await axios.get(`${API_URL}/tickets/`);
-                console.log(response.data)
-                setTickets(response.data.results);
-                setNextPageURL(response.data.next);
-            }
-            catch (error){
-                console.log(error)
-            }
-        };
         getTickets();
     }, [])
 
-    const nextPage = async () => {
-        const response = await axios.get(nextPageURL);
-        setTickets(response.data.results);
-        setNextPageURL(response.data.next);
+    const handlePageChange = (selectedPage) => {
+        const pageNumber = selectedPage.selected + 1;
+        setCurrentPage(selectedPage.selected);
+        getTickets(pageNumber);
     };
 
     return (
@@ -77,13 +78,16 @@ const TicketsList = () => {
                 <TableHeader/>
                 <TableBody tickets={tickets}/>
             </table>
-            <button className="btn btn-primary" onClick={nextPage}>
-                Next
-            </button>
+            <ReactPaginate
+                pageCount={pageCount}
+                initialPage={currentPage}
+                onPageChange={handlePageChange}
+                containerClassName="pagination"
+                activeClassName="active"
+            />
         </div>
     );
 };
-
 export default TicketsList;
 
 
