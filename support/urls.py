@@ -24,7 +24,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from message.views import MessageViewSet
 from notification.consumers import TicketConsumer
-from ticket.views import AssignTicketViewSet, TicketViewSet
+from ticket.views import AssignTicketViewSet, TicketViewSet, TicketStatusChoicesListView
 from user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
 router = DefaultRouter()
@@ -41,7 +41,7 @@ schema_view = get_schema_view(
     public=True,
 )
 websocket_urlpatterns = [
-   path('ws/tickets/<ticket_id>/', TicketConsumer.as_asgi()),
+    path('ws/tickets/<ticket_id>/', TicketConsumer.as_asgi()),
 ]
 
 urlpatterns = [
@@ -51,6 +51,7 @@ urlpatterns = [
                   path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
                   path('logout/', UserLogoutView.as_view(), name='logout'),
                   path('auth/', include('djoser.urls.base')),
+                  path('ticket_statuses/', TicketStatusChoicesListView.as_view(), name="ticket_status"),
                   path('auth/activate/<uid>/<token>', ActivateUser.as_view({'get': 'activation'}), name='activation'),
                   path('', include(websocket_urlpatterns)),
               ] + router.urls

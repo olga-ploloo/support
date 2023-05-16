@@ -2,6 +2,7 @@ from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from user.permissions import IsCustomer, IsSupport
@@ -31,7 +32,7 @@ class TicketViewSet(mixins.CreateModelMixin,
         if self.request.user and self.action == 'get_customer_own_tickets':
             return self.queryset.filter(author=self.request.user)
         if self.request.user and self.action == 'get_support_own_tickets':
-            return Ticket.objects.select_related('assigned_ticket')\
+            return Ticket.objects.select_related('assigned_ticket') \
                 .filter(assigned_ticket__assigned_support=self.request.user)
         return super().get_queryset()
 
@@ -106,3 +107,10 @@ class AssignTicketViewSet(mixins.UpdateModelMixin,
             is_assign=True,
             assigned_support=self.request.user
         )
+
+
+class TicketStatusChoicesListView(APIView):
+    """Return the list of allowed statuses for the ticket."""
+    def get(self, request):
+        choices = Ticket.TicketStatus.choices
+        return Response(choices)

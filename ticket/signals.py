@@ -10,7 +10,7 @@ def create_assign_ticket(sender, instance, created, **kwargs):
     if created:
         AssignTicket.objects.create(
             ticket=instance,
-            )
+        )
 
 
 @receiver(post_save, sender=Ticket)
