@@ -2,19 +2,30 @@ import React, {useState, useEffect} from "react";
 import {useNavigate, useParams} from 'react-router-dom';
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
-const TicketUpdate = () => {
+
+
+
+const TicketUpdate = ({ticketId, updateTicket}) => {
+    // console.log(props.ticketId)
     const [status, setStatus] = useState("")
     const [statusList, setStatusList] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const openModal = () => {
+        setShowModal(true);
+    };
 
-    const navigate = useNavigate()
-    const {id} = useParams()
+    const closeModal = () => {
+        setShowModal(false);
+    };
 
     const getStatusList = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/ticket_statuses/`);
             setStatusList(response.data);
-            console.log(response.data)
         } catch (error) {
             console.error(error);
         }
@@ -22,22 +33,8 @@ const TicketUpdate = () => {
 
     const getTicket = async () => {
         try {
-            const response = await axios.get(`${constants.API_URL}/tickets/${id}`);
+            const response = await axios.get(`${constants.API_URL}/tickets/${ticketId}`);
             setStatus(response.data.status);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const handleChangeStatus = (e) => {
-    setStatus(e.target.value);
-    console.log(status)
-  };
-
-     const updateTicketStatus = async () => {
-        try {
-            const response = await axios.put(`${constants.API_URL}/tickets/${id}`, { status: status });
-            console.log(response.data)
-            // setTicket(response.data);
         } catch (error) {
             console.log(error)
         }
@@ -46,22 +43,48 @@ const TicketUpdate = () => {
     useEffect(() => {
         getTicket();
         getStatusList();
-    }, [])
+    }, [ticketId])
 
-// navigate('/home');
+
     return (
         <div className="form-group">
-            <label>
-                Status:
-                <select value={status} onChange={handleChangeStatus}>
-                    {statusList.map((status) => (
-                        <option key={status[0]}>{status[1]}</option>
-                    ))}
-                </select>
-            </label>
-            <button onClick={updateTicketStatus}>Update</button>
+            <button type="button" onClick={openModal}/>
+            <Modal
+                className="modal"
+                show={showModal}
+                onHide={closeModal}
+                backdrop="static"
+                keyboard={false}
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Update status</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                   <Row>
+                    <label>
+                        Select status for ticket №{ticketId}:
+                        <Form.Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                            {statusList.map((status) => (
+                                <option key={status[0]} value={status[0]}>{status[1]}</option>
+                            ))}
+                        </Form.Select>
+                    </label>
+                   </Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className="modal-btn confirm-btn" onClick={(e) => {
+                        e.preventDefault();
+                        updateTicket(status);
+                        closeModal();
+                    }}>Update
+                    </button>
+                    <button className="modal-btn cancel-btn" onClick={closeModal}>
+                        Close
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
-
     )
 }
 export default TicketUpdate;

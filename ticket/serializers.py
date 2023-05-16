@@ -13,7 +13,7 @@ class AssignTicketSerializer(serializers.ModelSerializer):
 
 class TicketSerializer(serializers.ModelSerializer):
     messages = serializers.StringRelatedField(many=True, read_only=True)
-    author = serializers.StringRelatedField()
+    author = serializers.StringRelatedField(read_only=True)
     assigned_ticket = AssignTicketSerializer()
 
     class Meta:

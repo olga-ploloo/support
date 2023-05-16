@@ -2,9 +2,12 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 import {Link, useParams} from "react-router-dom";
+import TicketUpdate from "./ticketUpdate";
+
 
 const TicketsDetail = () => {
     const [ticket, setTicket] = useState("")
+    const [ticketStatus, setTicketStatus] = useState(ticket.status)
     const {id} = useParams()
     const [isOpen, setIsOpen] = useState(false);
     const handleClick = () => {
@@ -23,14 +26,25 @@ const TicketsDetail = () => {
         }
     }
 
+    async function updateTicket(status) {
+        try {
+            const response = await axios.put(`${constants.API_URL}/tickets/${id}/`,
+                {status: status});
+            setTicketStatus(status)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         getTicket();
     }, [])
 
     return (
         <div>
-            <h2>Ticket Detail № {ticket.id}</h2> <h3>{ticket.status}</h3>
-            <Link className="btn btn-info" to={`/${ticket.id}/update`}>Update status</Link>
+            <h2>Ticket Detail № {ticket.id}</h2> <h3>{ticketStatus}</h3>
+            <TicketUpdate ticketId={ticket.id}
+                          updateTicket={updateTicket}/>
             <div className="single-ticket-info">
                 <p>{ticket.title}</p>
                 The {ticket.author} reported:
