@@ -1,8 +1,8 @@
 import React from "react";
 
-const AddTicket = () => {
+const TicketAdd = () => {
     return (
         <h1>Add Ticket</h1>
     )
 }
-export default AddTicket;
+export default TicketAdd;

@@ -6,8 +6,9 @@ import NavBar from "./components/navBar";
 import TicketList from "./components/ticketsList"
 import Home from "./components/home";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import AddTicket from "./components/addTicket";
+import TicketAdd from "./components/ticketAdd";
 import TicketDetail from "./components/ticketDetail";
+import TicketUpdate from "./components/ticketUpdate";
 
 
 function App() {
@@ -16,8 +17,9 @@ function App() {
             <NavBar/>
             <Routes>
                 <Route exact path="/" element={<TicketList/>}/>
-                <Route exact path="/addTicket" element={<AddTicket/>}/>
+                <Route exact path="/addTicket" element={<TicketAdd/>}/>
                 <Route exact path="/:id" element={<TicketDetail/>}/>
+                <Route exact path="/:id/update" element={<TicketUpdate/>}/>
 
             </Routes>
         </Router>

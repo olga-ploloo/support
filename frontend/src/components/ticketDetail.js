@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 
 const TicketsDetail = () => {
     const [ticket, setTicket] = useState("")
@@ -13,10 +13,9 @@ const TicketsDetail = () => {
     const handleClose = () => {
         setIsOpen(false);
     };
-    const getProduct = async () => {
+    const getTicket = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/${id}`);
-            console.log(response.data)
             setTicket(response.data);
 
         } catch (error) {
@@ -25,16 +24,13 @@ const TicketsDetail = () => {
     }
 
     useEffect(() => {
-        getProduct();
+        getTicket();
     }, [])
-
-
-
-
 
     return (
         <div>
             <h2>Ticket Detail № {ticket.id}</h2> <h3>{ticket.status}</h3>
+            <Link className="btn btn-info" to={`/${ticket.id}/update`}>Update status</Link>
             <div className="single-ticket-info">
                 <p>{ticket.title}</p>
                 The {ticket.author} reported:
