@@ -7,7 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 from user.permissions import IsCustomer, IsSupport
 
 from .models import AssignTicket, Ticket
-from .serializers import AssignTicketSerializer, TicketSerializer
+from .serializers import AssignTicketSerializer, TicketSerializer, TicketCreateSerializer
 from .services import status_update_notification
 
 
@@ -19,6 +19,11 @@ class TicketViewSet(mixins.CreateModelMixin,
                     GenericViewSet):
     queryset = Ticket.objects.select_related('author').select_related('assigned_ticket').prefetch_related('messages')
     serializer_class = TicketSerializer
+
+    def get_serializer_class(self):
+        if self.action == "create":
+            return TicketCreateSerializer
+        return self.serializer_class
 
     def get_queryset(self) -> queryset:
         if self.action == 'get_unsolved_tickets':
