@@ -49,7 +49,7 @@
   padding: 0;
 }
 
-.pagination a {
+.pagination a, .btn-more{
   cursor: default;
   padding: 10px;
   border-radius: 5px;
@@ -58,17 +58,18 @@
   margin-left: 10px;
 }
 
-.pagination li:not(.disabled) a:hover {
+.pagination li:not(.disabled) a:hover, .btn-more:hover{
   background-color: #ffffff;
   cursor: pointer;
+  color: #281750;
 }
 
-.pagination li a {
+.pagination li a, .btn-more{
   font-weight: bold;
   text-decoration: none;
 }
 
-.pagination li.active a {
+.pagination li.active a, .btn-more{
  color: #fff;
  background: #281750;
 }
@@ -78,3 +79,9 @@
  color: rgb(198, 197, 202);
  border: 1px solid rgb(198, 197, 202);
 }
+
+.ticket-image{
+  height: 200px;
+  width: 300px;
+}
+

@@ -3,7 +3,9 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 import ReactPaginate from 'react-paginate';
-import TextTruncate from 'react-text-truncate';
+import { Link } from 'react-router-dom';
+
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 const TableHeader = () => {
     return (
@@ -14,8 +16,8 @@ const TableHeader = () => {
             <th>Creation date</th>
             <th>Status</th>
             <th>Author</th>
-            <th>Title</th>
-            <th>Description</th>
+            <th>Assignee</th>
+            <th></th>
         </tr>
         </thead>
     );
@@ -32,19 +34,14 @@ const TableBody = ({tickets}) => {
             </tr>
         ) : (
             tickets.map((ticket, index) => (
-                <tr>
+                <tr key={ticket.id}>
                     <td >{index+1}</td>
                     <td>{ticket.id}</td>
                     <td>{moment(ticket.created_at).format('DD/MM/YYYY HH:mm:ss')}</td>
                     <td>{ticket.status}</td>
                     <td>{ticket.author}</td>
-                    <td>{ticket.title}</td>
-                    <td><TextTruncate
-                        line={1}
-                        element="span"
-                        truncateText="…"
-                        text={ticket.description}
-                    /></td>
+                    <td>{ticket.assigned_ticket.assigned_support}</td>
+                    <td><Link className="btn-more" to={`/${ticket.id}/`}>More</Link></td>
                 </tr>
             ))
         )}

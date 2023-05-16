@@ -17,7 +17,7 @@ class TicketViewSet(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
                     mixins.DestroyModelMixin,
                     GenericViewSet):
-    queryset = Ticket.objects.select_related('author').prefetch_related('messages')
+    queryset = Ticket.objects.select_related('author').select_related('assigned_ticket').prefetch_related('messages')
     serializer_class = TicketSerializer
 
     def get_queryset(self) -> queryset:
