@@ -20,7 +20,7 @@ const TicketsDetail = () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/${id}`);
             setTicket(response.data);
-
+            setTicketStatus(response.data.status);
         } catch (error) {
             console.log(error)
         }

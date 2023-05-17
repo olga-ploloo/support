@@ -1,13 +1,9 @@
 import React, {useState, useEffect} from "react";
-import {useNavigate, useParams} from 'react-router-dom';
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-
-
-
 
 const TicketUpdate = ({ticketId, updateTicket}) => {
     // console.log(props.ticketId)
@@ -47,8 +43,8 @@ const TicketUpdate = ({ticketId, updateTicket}) => {
 
 
     return (
-        <div className="form-group">
-            <button type="button" onClick={openModal}/>
+        <div>
+            <button className="modal-btn confirm-btn" onClick={openModal}>Update status</button>
             <Modal
                 className="modal"
                 show={showModal}

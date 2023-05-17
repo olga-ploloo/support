@@ -19,12 +19,8 @@ function App() {
                 <Route exact path="/" element={<TicketList/>}/>
                 <Route exact path="/addTicket" element={<TicketAdd/>}/>
                 <Route exact path="/:id" element={<TicketDetail/>}/>
-                <Route exact path="/:id/update" element={<TicketUpdate/>}/>
-
             </Routes>
         </Router>
-        {/*  <NavBar/>*/}
-        {/*<TicketList/>*/}
     </div>;
 }
 
