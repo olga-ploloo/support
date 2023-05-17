@@ -8,30 +8,29 @@ import Home from "./components/home";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import TicketAdd from "./components/ticketAdd";
 import TicketDetail from "./components/ticketDetail";
-import TicketUpdate from "./components/ticketUpdate";
-
+import LoginForm from "./components/loginForm";
+import {setAuthToken} from "./services/authService";
 
 function App() {
+    const token = localStorage.getItem("access");
+    if (token) {
+        setAuthToken(token);
+    }
     return <div className="App">
         <Router>
             <NavBar/>
             <Routes>
-                <Route exact path="/" element={<TicketList/>}/>
+                <Route exact path="/" element={<Home/>}/>
+                <Route exact path="/tickets" element={<TicketList/>}/>
                 <Route exact path="/addTicket" element={<TicketAdd/>}/>
-                <Route exact path="/:id" element={<TicketDetail/>}/>
+                <Route exact path="/tickets/:id" element={<TicketDetail/>}/>
+                <Route exac path="/login" element={<LoginForm/>}/>
+                {/*<Redirect to="/" />*/}
             </Routes>
         </Router>
     </div>;
 }
 
-// function App() {
-//     return (
-//         <Fragment>
-//             <NavBar/>
-//             <Home/>
-//         </Fragment>
-//     );
-// }
-
 export default App;
+
 
