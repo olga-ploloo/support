@@ -37,10 +37,6 @@
   }
 }
 
-.TicketsList{
-  margin-top: 25vmin;
-}
-
 .pagination {
   display: flex;
   justify-content: center;
@@ -122,4 +118,16 @@
 
 .modal-btn.cancel-btn:hover{
   background: rgba(79, 98, 167, 0.69)
+}
+
+.narrow-column{
+ width: 150px;
+}
+
+.medium-column{
+  width: 220px;
+}
+
+.TicketsList{
+  margin: 25px;
 }

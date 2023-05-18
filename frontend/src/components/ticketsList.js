@@ -6,18 +6,19 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {Table} from "reactstrap";
 
 const TableHeader = () => {
     return (
         <thead>
         <tr>
-            <th>№</th>
-            <th>Unique number</th>
-            <th>Creation date</th>
-            <th>Status</th>
-            <th>Author</th>
-            <th>Assignee</th>
-            <th></th>
+            <th className="narrow-column">№</th>
+            <th className="narrow-column">Unique number</th>
+            <th className="medium-column">Creation date</th>
+            <th className="medium-column">Status</th>
+            <th className="medium-column">Author</th>
+            <th className="medium-column">Assignee</th>
+            <th className="medium-column"></th>
         </tr>
         </thead>
     );
@@ -41,7 +42,7 @@ const TableBody = ({tickets}) => {
                     <td>{ticket.status}</td>
                     <td>{ticket.author}</td>
                     <td>{ticket.assigned_ticket.assigned_support}</td>
-                    <td><Link className="btn-more" to={`/${ticket.id}/`}>More</Link></td>
+                    <td><Link className="btn-more" to={`/tickets/${ticket.id}/`}>More</Link></td>
                 </tr>
             ))
         )}
@@ -76,10 +77,10 @@ const TicketsList = () => {
 
     return (
         <div>
-            <table className="table TicketsList">
+            <Table hover  className="TicketsList">
                 <TableHeader/>
                 <TableBody tickets={tickets}/>
-            </table>
+            </Table>
             <ReactPaginate
                 pageCount={pageCount}
                 initialPage={currentPage}
