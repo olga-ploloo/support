@@ -40,37 +40,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
 
-# class UserLoginSerializer(serializers.Serializer):
-#     email = serializers.EmailField()
-#     password = serializers.CharField(max_length=128, write_only=True)
-#     access = serializers.CharField(read_only=True)
-#     refresh = serializers.CharField(read_only=True)
-#     role = serializers.CharField(read_only=True)
-#
-#     def validate(self, data) -> list:
-#         user = authenticate(
-#             email=data['email'],
-#             password=data['password']
-#         )
-#         if not user:
-#             raise serializers.ValidationError('Invalid credentials')
-#         data['user'] = user
-#         return data
-
-
 class UserLogoutSerialiser(serializers.Serializer):
     refresh = serializers.CharField()
-
-    # def validate(self, data):
-    #     self.token = data['refresh']
-    #     return data
-    #
-    # def save(self, **kwargs):
-    #     add_token_to_blacklist(self.token)
-    # try:
-    #     RefreshToken(self.token).blacklist()
-    # except TokenError as error:
-    #     raise serializers.ValidationError(str(error))
 
 
 class UserListSerializer(serializers.ModelSerializer):
