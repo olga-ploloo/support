@@ -8,7 +8,7 @@ class AssignTicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AssignTicket
-        fields = ['is_assign', 'assigned_support']
+        fields = ['id', 'is_assign', 'assigned_support']
 
 
 class TicketSerializer(serializers.ModelSerializer):

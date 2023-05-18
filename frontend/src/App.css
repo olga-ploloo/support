@@ -45,7 +45,7 @@
   padding: 0;
 }
 
-.pagination a, .btn-more{
+.pagination a{
   cursor: default;
   padding: 10px;
   border-radius: 5px;
@@ -54,18 +54,18 @@
   margin-left: 10px;
 }
 
-.pagination li:not(.disabled) a:hover, .btn-more:hover{
+.pagination li:not(.disabled) a:hover{
   background-color: #ffffff;
   cursor: pointer;
   color: #281750;
 }
 
-.pagination li a, .btn-more{
+.pagination li a{
   font-weight: bold;
   text-decoration: none;
 }
 
-.pagination li.active a, .btn-more{
+.pagination li.active a{
  color: #fff;
  background: #281750;
 }
@@ -107,8 +107,8 @@
   color: #FFFFFF;
 
 }.modal-btn.cancel-btn{
-   background: #4F62A7;
-   box-shadow: #4F62A7 0 10px 20px -10px;
+  background: #4F62A7;
+  box-shadow: #4F62A7 0 10px 20px -10px;
   color: #FFFFFF;
 }
 
@@ -118,6 +118,21 @@
 
 .modal-btn.cancel-btn:hover{
   background: rgba(79, 98, 167, 0.69)
+}
+
+.modal-btn.btn-more{
+  background: #FFFFFF;
+  border-radius: 999px;
+  box-shadow: #281750 0 10px 20px -10px;
+  color: #0e082c;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.btn-more:hover{
+  background: #0e082c;
+  color: #FFFFFF;
+
 }
 
 .narrow-column{
@@ -130,4 +145,10 @@
 
 .TicketsList{
   margin: 25px;
+}
+
+.details-col{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
