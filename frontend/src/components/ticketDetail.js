@@ -10,6 +10,8 @@ const TicketsDetail = () => {
     const [ticketStatus, setTicketStatus] = useState(ticket.status)
     const {id} = useParams()
     const [isOpen, setIsOpen] = useState(false);
+    const [isImage, setIsImage] = useState(false);
+    console.log(ticket.image)
     const handleClick = () => {
         setIsOpen(true);
     };
@@ -49,15 +51,16 @@ const TicketsDetail = () => {
                 <p>{ticket.title}</p>
                 The {ticket.author} reported:
                 <p>{ticket.description}</p>
-                {!isOpen && (
+                {ticket.image && !isOpen ? (
                     <img className="ticket-image" src={ticket.image} alt="ticket picture" onClick={handleClick}/>
-                )}
-                {isOpen && (
-                    <div className="fullscreen-overlay" onClick={handleClose}>
-                        <div className="fullscreen-image">
-                            <img src={ticket.image} alt="full screen picture"/>
+                ) : (
+                    isOpen && (
+                        <div className="fullscreen-overlay" onClick={handleClose}>
+                            <div className="fullscreen-image">
+                                <img src={ticket.image} alt="full screen picture"/>
+                            </div>
                         </div>
-                    </div>
+                    )
                 )}
             </div>
         </div>

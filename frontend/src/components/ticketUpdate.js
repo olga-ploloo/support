@@ -51,10 +51,11 @@ const TicketUpdate = ({ticketId, updateTicket}) => {
                 onHide={closeModal}
                 backdrop="static"
                 keyboard={false}
-                centered
-            >
+                centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Update status</Modal.Title>
+                    <Modal.Title>
+                        Update status
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                    <Row>
