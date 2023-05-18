@@ -12,6 +12,7 @@ import LoginForm from "./components/loginForm";
 import {setAuthToken} from "./services/authService";
 import axios from "axios";
 import * as constants from "./constatns/ticketConstans";
+import OwnTickets from "./components/ownTickets";
 
 export const LoginContext = createContext();
 
@@ -56,6 +57,7 @@ function App() {
                     <Route exact path="/tickets" element={<TicketList/>}/>
                     <Route exact path="/addTicket" element={<TicketAdd/>}/>
                     <Route exact path="/tickets/:id" element={<TicketDetail/>}/>
+                    <Route exact path="/tickets/own_tickets" element={<OwnTickets/>}/>
                     <Route exac path="/login" element={<LoginForm/>}/>
                 </Routes>
             </Router>
