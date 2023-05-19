@@ -6,7 +6,7 @@ import * as constants from "../constatns/ticketConstans";
 import {setAuthToken} from "../services/authService";
 import {Alert, Label} from "reactstrap";
 
-const LoginForm = () => {
+const Login = () => {
     // const [loggedIn, setLoggedIn] = useContext(LoginContext)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -80,4 +80,4 @@ const LoginForm = () => {
         </div>
     )
 }
-export default LoginForm;
+export default Login;

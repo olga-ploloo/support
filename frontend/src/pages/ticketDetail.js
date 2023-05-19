@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
-import {Link, useParams} from "react-router-dom";
-import TicketUpdate from "./ticketUpdate";
+import {useParams} from "react-router-dom";
+import TicketUpdate from "../components/ticketUpdate";
+import AssignTicket from "../components/assignTicket";
 
 
 const TicketsDetail = () => {
@@ -10,8 +11,10 @@ const TicketsDetail = () => {
     const [ticketStatus, setTicketStatus] = useState(ticket.status)
     const {id} = useParams()
     const [isOpen, setIsOpen] = useState(false);
-    const [isImage, setIsImage] = useState(false);
-    console.log(ticket.image)
+
+    useEffect(() => {
+        getTicket();
+    }, [])
     const handleClick = () => {
         setIsOpen(true);
     };
@@ -28,7 +31,7 @@ const TicketsDetail = () => {
         }
     }
 
-    async function updateTicket(status) {
+    const updateTicket = async (status) => {
         try {
             const response = await axios.put(`${constants.API_URL}/tickets/${id}/`,
                 {status: status});
@@ -38,15 +41,23 @@ const TicketsDetail = () => {
         }
     }
 
-    useEffect(() => {
+    const updateTicketInfo = () => {
         getTicket();
-    }, [])
+    }
 
+console.log(ticket.assigned_ticket)
     return (
         <div>
             <h2>Ticket Detail № {ticket.id}</h2> <h3>{ticketStatus}</h3>
-            <TicketUpdate ticketId={ticket.id}
-                          updateTicket={updateTicket}/>
+            {ticket.assigned_ticket.assigned_support ? (
+                <td><TicketUpdate ticketId={ticket.id}
+                                  updateTicket={updateTicket}/></td>
+            ) : (
+                <td><AssignTicket assignTicketId={ticket.assigned_ticket.id}
+                                  update={updateTicketInfo}/>
+                </td>
+            )
+            }
             <div className="single-ticket-info">
                 <p>{ticket.title}</p>
                 The {ticket.author} reported:

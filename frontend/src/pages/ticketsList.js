@@ -4,9 +4,8 @@ import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 import ReactPaginate from 'react-paginate';
 import {Link} from 'react-router-dom';
-
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {Table} from "reactstrap";
+import AssignTicket from "../components/assignTicket";
 
 
 const TicketsList = () => {
@@ -34,30 +33,24 @@ const TicketsList = () => {
         getTickets(pageNumber);
     };
 
-    const assignTicket = async (assignTicketId, updatedTicketId) => {
-        try {
-            const response = await axios.put(`${constants.API_URL}/assign_ticket/${assignTicketId}/`);
-            getTickets()
-        } catch (error) {
-            console.error(error);
-        }
+    const updateTicketsList = () => {
+         getTickets()
     }
-
     const TableHeader = () => {
-    return (
-        <thead>
-        <tr>
-            <th className="narrow-column">№</th>
-            <th className="narrow-column">Unique number</th>
-            <th className="medium-column">Creation date</th>
-            <th className="medium-column">Status</th>
-            <th className="medium-column">Author</th>
-            <th className="medium-column">Assignee</th>
-            <th className="medium-column"></th>
-        </tr>
-        </thead>
-    );
-};
+        return (
+            <thead>
+            <tr>
+                <th className="narrow-column">№</th>
+                <th className="narrow-column">Unique number</th>
+                <th className="medium-column">Creation date</th>
+                <th className="medium-column">Status</th>
+                <th className="medium-column">Author</th>
+                <th className="medium-column">Assignee</th>
+                <th className="medium-column"></th>
+            </tr>
+            </thead>
+        );
+    };
 
     const TableBody = ({tickets}) => {
         return (
@@ -77,19 +70,13 @@ const TicketsList = () => {
                         <td>{ticket.status}</td>
                         <td>{ticket.author}</td>
                         {!ticket.assigned_ticket.assigned_support ? (
-                            <td>
-                                <button className="modal-btn confirm-btn" onClick={(e) => {
-                                    e.preventDefault();
-                                    assignTicket(ticket.assigned_ticket.id, ticket);
-                                }}>
-                                    Assign me
-                                </button>
+                            <td><AssignTicket assignTicketId={ticket.assigned_ticket.id}
+                                update={updateTicketsList}/>
                             </td>
                         ) : (
                             <td>{ticket.assigned_ticket.assigned_support}</td>
                         )
                         }
-
                         <td className="details-col">
                             <Link className="modal-btn btn-more" to={`/tickets/${ticket.id}/`}>
                                 More details

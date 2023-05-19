@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik:400,500&display=swap');
 .App {
   text-align: center;
+   font-family: 'Rubik', sans-serif;
 }
 
 .App-logo {
@@ -154,11 +156,30 @@
 }
 .card-btn-link{
   text-decoration: none;
-  color: #0e082c;
+  color: #FFFFFF;
+}
+
+.card-btn-link:hover{
+  color: #ffffff;
 }
 
 .home-container{
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.home-card{
+  width: 300px;
+  margin: 25px 25px;
+}
+
+.home-card.last-added{
+  background: #0e082c;
+  color: #FFFFFF;
+}
+.home-card.own{
+  background: #0e082c;
+  color: #FFFFFF;
 }

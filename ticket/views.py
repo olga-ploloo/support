@@ -27,18 +27,19 @@ class TicketViewSet(mixins.CreateModelMixin,
         return self.serializer_class
 
     def get_queryset(self) -> queryset:
-        if self.action == 'get_unsolved_tickets':
-            return self.queryset.filter(status=Ticket.TicketStatus.UNSOLVED)
+        if self.action == 'get_unassigned_tickets':
+            return self.queryset.filter(assigned_ticket__is_assign=False)
         if self.request.user and self.action == 'get_customer_own_tickets':
             return self.queryset.filter(author=self.request.user)
         if self.request.user and self.action == 'get_support_own_tickets':
-            return Ticket.objects.select_related('assigned_ticket') \
-                .filter(assigned_ticket__assigned_support=self.request.user)
+            return self.queryset.filter(assigned_ticket__assigned_support=self.request.user)
         return super().get_queryset()
 
-    @action(methods=["get"], detail=False, url_path="unsolved_tickets", url_name="unsolved_tickets")
-    def get_unsolved_tickets(self, request, *args, **kwargs) -> Response:
-        """Return all unsolved tickets. Allowed only for support services."""
+    @action(methods=["get"], detail=False, url_path="unassigned_tickets", url_name="unassigned_tickets")
+    def get_unassigned_tickets(self, request, *args, **kwargs) -> Response:
+        """Return all unassigned tickets. Allowed only for support services."""
+        print(self.list(request))
+        print('!!!!')
         return self.list(request, *args, **kwargs)
 
     @action(methods=["get"], detail=False, url_path="customer_own_tickets", url_name="customer_own_tickets")

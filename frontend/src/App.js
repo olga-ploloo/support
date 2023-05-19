@@ -3,16 +3,16 @@ import './App.css';
 import React, {createContext, useEffect, useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./components/navBar";
-import TicketList from "./components/ticketsList"
-import Home from "./components/home";
+import TicketList from "./pages/ticketsList"
+import Home from "./pages/home";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import TicketAdd from "./components/ticketAdd";
-import TicketDetail from "./components/ticketDetail";
-import LoginForm from "./components/loginForm";
+import TicketDetail from "./pages/ticketDetail";
+import Login from "./pages/login";
 import {setAuthToken} from "./services/authService";
 import axios from "axios";
 import * as constants from "./constatns/ticketConstans";
-import OwnTickets from "./components/ownTickets";
+import OwnTickets from "./pages/ownTickets";
 
 export const LoginContext = createContext();
 
@@ -58,7 +58,7 @@ function App() {
                     <Route exact path="/addTicket" element={<TicketAdd/>}/>
                     <Route exact path="/tickets/:id" element={<TicketDetail/>}/>
                     <Route exact path="/tickets/own_tickets" element={<OwnTickets/>}/>
-                    <Route exac path="/login" element={<LoginForm/>}/>
+                    <Route exac path="/login" element={<Login/>}/>
                 </Routes>
             </Router>
         </LoginContext.Provider>
