@@ -18,7 +18,7 @@ services:
 
   app:
     build:
-      context: .
+      context: ./backend
     command: >
       sh -c "python manage.py migrate &&
              python manage.py wait_for_db &&
@@ -35,7 +35,7 @@ services:
   celery:
     restart: always
     build:
-      context: .
+      context: ./backend
     command: celery -A support.celery worker -l info
     volumes:
       - celery_data:/app
@@ -43,7 +43,16 @@ services:
       - redis
       - app
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - frontend:/frontend
+
 volumes:
   postgres_data:
   redis_data:
   celery_data:
+  frontend:
