@@ -25,7 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = dotenv_values().get('SECRET_KEY')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -42,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user',
-    'ticket',
-    'message',
-    'core',
+    'backend.user',
+    'backend.ticket',
+    'backend.message',
+    'backend.core',
     'djoser',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -53,7 +52,7 @@ INSTALLED_APPS = [
     'django_redis',
     'channels',
     'corsheaders',
-    'notification',
+    'backend.notification',
 ]
 
 MIDDLEWARE = [
@@ -65,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'core.middleware.jwt_blacklist.BlacklistTokenMiddleware',
+    'backend.core.middleware.jwt_blacklist.BlacklistTokenMiddleware',
 ]
 
 ROOT_URLCONF = 'support.urls'
@@ -87,7 +86,7 @@ TEMPLATES = [
 ]
 
 # WSGI_APPLICATION = 'support.wsgi.application'
-ASGI_APPLICATION = 'core.asgi.application'
+ASGI_APPLICATION = 'backend.core.asgi.application'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost",
     "http://localhost:3000",
@@ -197,8 +196,8 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
     'SERIALIZERS': {
-        'user_create': 'user.serializers.UserRegistrationSerializer',
-        'user': 'user.serializers.UserListSerializer',
+        'user_create': 'backend.user.serializers.UserRegistrationSerializer',
+        'user': 'backend.user.serializers.UserListSerializer',
     },
     'HIDE_USERS': True,
 }

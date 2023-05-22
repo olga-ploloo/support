@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from ticket.models import Ticket
-from user.models import User
+from backend.ticket.models import Ticket
 
 from .models import Message
 

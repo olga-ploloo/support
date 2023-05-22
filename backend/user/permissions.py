@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-from user.models import User
+from backend.user.models import User
 
 
 class IsSupport(BasePermission):

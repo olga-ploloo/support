@@ -7,7 +7,7 @@ from channels.layers import get_channel_layer
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 
-from notification.models import Notification
+from backend.notification.models import Notification
 
 
 # @database_sync_to_async

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
-from user.permissions import IsCustomer, IsSupport
+from backend.user.permissions import IsCustomer, IsSupport
 
 from .models import AssignTicket, Ticket
 from .serializers import AssignTicketSerializer, TicketSerializer, TicketCreateSerializer

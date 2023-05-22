@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from ticket.models import Ticket
+from backend.ticket.models import Ticket
 
 
 @pytest.mark.django_db

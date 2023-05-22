@@ -1,7 +1,7 @@
 from django.conf import settings
 
-from user.exceptions import BlacklistedTokenException, InvalidHeadersException
-from user.utils.connection import get_redis_client
+from backend.user.exceptions import BlacklistedTokenException, InvalidHeadersException
+from backend.user.utils.connection import get_redis_client
 
 
 def check_blacklisted_token(token):

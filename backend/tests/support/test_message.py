@@ -2,7 +2,7 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from message.models import Message
+from backend.message.models import Message
 
 
 @pytest.mark.django_db

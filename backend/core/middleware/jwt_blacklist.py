@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 
-from user.exceptions import BlacklistedTokenException, InvalidHeadersException
-from user.services import check_blacklisted_token, get_token_from_header
+from backend.user.exceptions import BlacklistedTokenException, InvalidHeadersException
+from backend.user.services import check_blacklisted_token, get_token_from_header
 
 
 class BlacklistTokenMiddleware:

@@ -1,12 +1,11 @@
-from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from user.managers import CustomUserManager
+from backend.user.managers import CustomUserManager
 
 
 class User(AbstractUser):
-    # что если я потом захочу добвать еще одного типа пользователя?
+
     class Role(models.TextChoices):
         SUPPORT = 'support'
         CUSTOMER = 'customer'

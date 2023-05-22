@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from ticket.models import Ticket
+from backend.ticket.models import Ticket
 
 
 class Message(models.Model):

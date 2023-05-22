@@ -1,4 +1,4 @@
-from user.models import User
+from backend.user.models import User
 
 
 def created_message_notification(instance):

@@ -22,10 +22,10 @@ from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from message.views import MessageViewSet
-from notification.consumers import TicketConsumer
-from ticket.views import AssignTicketViewSet, TicketViewSet, TicketStatusChoicesListView
-from user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
+from backend.message.views import MessageViewSet
+from backend.notification.consumers import TicketConsumer
+from backend.ticket.views import AssignTicketViewSet, TicketViewSet, TicketStatusChoicesListView
+from backend.user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
 router = DefaultRouter()
 router.register('tickets', TicketViewSet, basename='ticket')
