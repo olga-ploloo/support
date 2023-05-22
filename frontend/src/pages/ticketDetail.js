@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import TicketUpdate from "../components/ticketUpdate";
 import AssignTicket from "../components/assignTicket";
+import {Container, Row, Col} from "reactstrap";
 
 
 const TicketsDetail = () => {
@@ -45,36 +46,65 @@ const TicketsDetail = () => {
         getTicket();
     }
 
-console.log(ticket.assigned_ticket)
+    console.log(ticket.assigned_ticket)
     return (
-        <div>
-            <h2>Ticket Detail № {ticket.id}</h2> <h3>{ticketStatus}</h3>
-            {ticket.assigned_ticket.assigned_support ? (
-                <td><TicketUpdate ticketId={ticket.id}
-                                  updateTicket={updateTicket}/></td>
-            ) : (
-                <td><AssignTicket assignTicketId={ticket.assigned_ticket.id}
-                                  update={updateTicketInfo}/>
-                </td>
-            )
-            }
-            <div className="single-ticket-info">
-                <p>{ticket.title}</p>
-                The {ticket.author} reported:
-                <p>{ticket.description}</p>
-                {ticket.image && !isOpen ? (
-                    <img className="ticket-image" src={ticket.image} alt="ticket picture" onClick={handleClick}/>
+        <>
+            <Container>
+                <Row>
+                    <Col><h2>Ticket Detail № {ticket.id}</h2></Col><Col><h3>{ticketStatus}</h3></Col>
+                </Row>
+                {ticket.assigned_ticket.assigned_support ? (
+                    <td><TicketUpdate ticketId={ticket.id}
+                                      updateTicket={updateTicket}/></td>
                 ) : (
-                    isOpen && (
-                        <div className="fullscreen-overlay" onClick={handleClose}>
-                            <div className="fullscreen-image">
-                                <img src={ticket.image} alt="full screen picture"/>
-                            </div>
-                        </div>
-                    )
-                )}
-            </div>
-        </div>
+                    <td><AssignTicket assignTicketId={ticket.assigned_ticket.id}
+                                      update={updateTicketInfo}/>
+                    </td>
+                )
+                }
+                <div className="single-ticket-info">
+                    <Row>
+                        <Col>
+                            <p>{ticket.title}</p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            The {ticket.author} reported:
+                        </Col>
+                        <Col>
+                            {ticket.image && (
+                                <p>Click on the image to enlarge</p>
+                            )}
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col >
+                            <p>{ticket.description}</p>
+                        </Col>
+                        <Col>
+                            {ticket.image && !isOpen ? (
+                                <img className="ticket-image" src={ticket.image} alt="ticket picture"
+                                     onClick={handleClick}/>
+                            ) : (
+                                isOpen && (
+                                    <div className="fullscreen-overlay" onClick={handleClose}>
+                                        <div className="fullscreen-image">
+                                            <img src={ticket.image} alt="full screen picture"/>
+                                        </div>
+                                    </div>
+                                )
+                            )}</Col>
+
+                    </Row>
+                </div>
+                <div>
+                    <Link className="modal-btn btn-more" to={`/tickets/${ticket.id}/`}>
+                        Open chat
+                    </Link>
+                </div>
+            </Container>
+        </>
     )
 }
 export default TicketsDetail;
