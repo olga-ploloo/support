@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
-import {Card, CardBody, CardTitle, ListGroup, ListGroupItem, Table} from "reactstrap";
+import { Card, CardBody, CardTitle, ListGroup, ListGroupItem } from "reactstrap";
 import moment from "moment/moment";
 import {Link} from "react-router-dom";
 
 
 const UnassignedTicketsList = () => {
     const [tickets, setTickets] = useState([]);
+
     const getUnassignedTickets = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/unassigned_tickets`);
             setTickets(response.data.results);
-            console.log(response)
         } catch (error) {
             console.log(error)
         }
@@ -44,12 +44,9 @@ const UnassignedTicketsList = () => {
                                     № {ticket.id} {moment(ticket.created_at).format('DD/MM/YYYY')}: {ticket.status}
                                 </ListGroupItem>
                             </Link>
-
                         ))
                     )}
                 </ListGroup>
-
-
             </Card>
 
         </>

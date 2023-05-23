@@ -38,8 +38,6 @@ class TicketViewSet(mixins.CreateModelMixin,
     @action(methods=["get"], detail=False, url_path="unassigned_tickets", url_name="unassigned_tickets")
     def get_unassigned_tickets(self, request, *args, **kwargs) -> Response:
         """Return all unassigned tickets. Allowed only for support services."""
-        print(self.list(request))
-        print('!!!!')
         return self.list(request, *args, **kwargs)
 
     @action(methods=["get"], detail=False, url_path="customer_own_tickets", url_name="customer_own_tickets")

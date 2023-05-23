@@ -70,7 +70,6 @@ class TicketConsumer(AsyncWebsocketConsumer):
     #         self.group_name,
     #         self.channel_name)
 
-
     # # вызывается когда метод получен из веб сокета
     # async def receive(self, text_data):
     #     text_data_json = json.loads(text_data)
@@ -89,4 +88,3 @@ class TicketConsumer(AsyncWebsocketConsumer):
     #
     #     # Send message to WebSocket
     #     await self.send(text_data=json.dumps({"message": message}))
-

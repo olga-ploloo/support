@@ -57,20 +57,3 @@ def test_user_logout(client, auth_client):
     response = auth_client.post('/logout/')
 
     assert response.status_code == status.HTTP_204_NO_CONTENT
-
-
-
-# @pytest.mark.django_db
-# def test_activation_url(user, client):
-#     # activation_url = reverse('activation')
-#     activation_url = settings.DJOSER.get('ACTIVATION_URL')
-#     print('hrer')
-#     data = {'uid': str(user.pk), 'token': user.activation_token}
-#     response = client.post(activation_url, data)
-#     # response = client.post('/token/', dict(
-#     #     email=test_user.get('email'),
-#     #     password='qwert',
-#     # ))
-#
-#     assert response.status_code == status.HTTP_204_NO_CONTENT
-#     # assert User.objects.get(pk=user.pk).is_active is True

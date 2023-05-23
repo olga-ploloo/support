@@ -18,6 +18,6 @@ class BlacklistTokenMiddleware:
                 status=error.status_code,
                 data={'detail': error.detail}
             )
-
         response = self._get_response(request)
+
         return response

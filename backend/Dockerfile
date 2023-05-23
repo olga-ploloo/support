@@ -19,4 +19,4 @@ RUN poetry install --no-interaction --no-ansi
 COPY . /app
 
 # lint
-#RUN flake8 --ignore=E501,F401 .
+RUN flake8 --ignore=E501,F401 .
