@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'backend.core.middleware.jwt_blacklist.BlacklistTokenMiddleware',
+    'backend.core.middleware.BlacklistTokenMiddleware.BlacklistTokenMiddleware',
 ]
 
 ROOT_URLCONF = 'support.urls'
@@ -85,12 +85,8 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'support.wsgi.application'
 ASGI_APPLICATION = 'backend.core.asgi.application'
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost",
-    "http://localhost:3000",
-]
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS').split()
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

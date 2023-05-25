@@ -15,7 +15,7 @@ const OwnTicketsCard = () => {
     const getOwnTickets = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/support_own_tickets`);
-            setOwnTickets(response.data.results);
+            setTickets(response.data.results);
         } catch (error) {
             console.log(error)
         }
@@ -35,7 +35,7 @@ const OwnTicketsCard = () => {
                                         You don't have any tickets.
                                     </ListGroupItem>
                                 ) : (
-                                    tickets.slice(0, 5).map((ticket) => (
+                                    tickets.slice(0, 5).map((ticket)  => (
                                         <Link to={`/tickets/${ticket.id}/`} className="card-btn-link">
                                             <ListGroupItem>
                                                 № {ticket.id} {moment(ticket.created_at).format('DD/MM/YYYY')}: {ticket.status}
