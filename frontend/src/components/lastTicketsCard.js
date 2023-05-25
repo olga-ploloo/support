@@ -1,13 +1,16 @@
 import {Card, CardBody, CardTitle, ListGroup, ListGroupItem} from "reactstrap";
 import {Link} from "react-router-dom";
 import moment from "moment/moment";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 
 const LastTicketsCard = () => {
     const [tickets, setTickets] = useState([]);
 
+    useEffect(() => {
+        getTickets();
+    }, [])
     const getTickets = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/`);
