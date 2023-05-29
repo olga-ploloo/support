@@ -6,7 +6,6 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
 const TicketUpdate = ({ticketId, updateTicket}) => {
-    // console.log(props.ticketId)
     const [status, setStatus] = useState("")
     const [statusList, setStatusList] = useState([]);
     const [showModal, setShowModal] = useState(false);
