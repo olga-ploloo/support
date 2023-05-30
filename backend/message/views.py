@@ -23,6 +23,13 @@ class MessageViewSet(mixins.CreateModelMixin,
 
         return [permission() for permission in permission_classes]
 
+    def list(self, request, *args, **kwargs):
+        """Get the ticket number and return the message list for that ticket."""
+        ticket_id = request.query_params.get('ticket')
+        queryset = Message.objects.filter(ticket_id=ticket_id)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new message from customer."""
         instance = serializer.save()

@@ -183,3 +183,7 @@
   background: #0e082c;
   color: #FFFFFF;
 }
+
+.message{
+  display: flex;
+}

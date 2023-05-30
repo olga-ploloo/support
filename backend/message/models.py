@@ -9,6 +9,7 @@ class Message(models.Model):
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     message = models.TextField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at']
