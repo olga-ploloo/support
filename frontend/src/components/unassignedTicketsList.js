@@ -39,7 +39,7 @@ const UnassignedTicketsList = () => {
                         </ListGroupItem>
                     ) : (
                         tickets.slice(0, 5).map((ticket, index) => (
-                            <Link to={`/tickets/${ticket.id}/`} className="card-btn-link">
+                            <Link to={`/tickets/${ticket.id}/`} className="card-btn-link" key={ticket.id}>
                                 <ListGroupItem>
                                     № {ticket.id} {moment(ticket.created_at).format('DD/MM/YYYY')}: {ticket.status}
                                 </ListGroupItem>
