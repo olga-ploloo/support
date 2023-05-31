@@ -2,26 +2,63 @@ import useWebSocket, {ReadyState} from "react-use-websocket";
 import React, {useEffect, useState} from "react";
 import * as constants from "../constatns/ticketConstans";
 import {useParams} from "react-router-dom";
+import axios from "axios";
+import {Col, Row} from "reactstrap";
 
 const ChatComponent = () => {
-    const {id} = useParams()
-    const [message, setMessage] = useState("");
-    const [messageHistory, setMessageHistory] = useState([]);
+        const {id} = useParams()
+        const [message, setMessage] = useState("");
+        const [messageHistory, setMessageHistory] = useState([]);
+        const socketUrl = `ws://${constants.HOST}/ws/chat/${id}/?token=${localStorage.access}`;
 
-    // console.log(localStorage.access)
-    const socketUrl = `ws://${constants.HOST}/ws/chat/${id}/?token=${localStorage.access}`;
-    const [welcomeMessage, setWelcomeMessage] = useState("");
-    const socket = useWebSocket(socketUrl);
+        const {
+            sendMessage,
+            sendJsonMessage,
+            lastMessage,
+            lastJsonMessage,
+            readyState,
+            getWebSocket,
+        } = useWebSocket(socketUrl, {
+            onOpen: () => console.log('Connected'),
+            onClose: () => console.log('Disconnected'),
+            shouldReconnect: (closeEvent) => true,
+            onError: (error) => console.log("WebSocket encountered an error: " + error.text),
+            onMessage: (event) => {
+                console.log("onmessage data " + event);
+                addMessage(event.toString());
+            }
+        });
 
+        const addMessage = (message) => {
+            setMessageHistory((prevMessages) => [...prevMessages, message]);
+        };
+        const getMessages = async () => {
+            try {
+                const response = await axios.get(`${constants.API_URL}/messages/`, {
+                    params: {
+                        ticket: id,
+                    }
+                });
+                setMessageHistory(response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
 
+        useEffect(() => {
+            getMessages();
+        }, [])
+        const handleSubmit = () => {
+            // toDo: check for whitespace
+            if (message) {
+                sendJsonMessage({
+                    // name: "chat_message",
+                    message: message,
+                });
+                setMessage("");
+            }
+        };
 
-const handleSubmit = () => {
-    socket.sendJsonMessage({
-        name: "chat_message",
-        message: message,
-    });
-    setMessage("");
-};
 //
 // useEffect(() => {
 //     if (lastMessage !== null) {
@@ -29,71 +66,41 @@ const handleSubmit = () => {
 //     }
 // }, [lastMessage]);
 //
-// return (
-//     <div>
-//         <h1>Chat</h1>
-//         <div>
-//             {receivedMessages.map((msg, index) => (
-//                 <p key={index}>{msg.data}</p>
-//             ))}
-//         </div>
-//         <input
-//             type="text"
-//             value={message}
-//             onChange={(e) => setMessage(e.target.value)}
-//         />
-//         <button onClick={handleSendMessage}>Send</button>
-//     </div>
-// );
-// const {readyState} = useWebSocket(socketUrl,);
+        return (
+            <>
+                <h1>Chat</h1>
+                <p>{getWebSocket}</p>
 
+                {messageHistory &&
+                    <div>
+                        {messageHistory.map((message, index) => (
+                            <div className="message" key={index}>
+                                <Row>
+                                    <Col>
+                                        {message.author}:
+                                    </Col>
+                                    <Col>
+                                        {message.message}
+                                    </Col>
 
-// console.log(socket)
-    socket.onopen= () => {
-        console.log("Connected!");
-    };
-socket.onclose = () => {
-    console.log("Disconnected!");
-}
+                                </Row>
+                            </div>
 
-//     onMessage: (e) => {
-//         const data = JSON.parse(e.data);
-//         switch (data.type) {
-//             case "welcome_message":
-//                 setWelcomeMessage(data.message);
-//                 break;
-//             default:
-//                 console.log("Unknown message type!");
-//                 break;
-//         }
-//     },
-
-// console.log(readyState)
-//
-// const connectionStatus = {
-//     [ReadyState.CONNECTING]: "Connecting",
-//     [ReadyState.OPEN]: "Open",
-//     [ReadyState.CLOSING]: "Closing",
-//     [ReadyState.CLOSED]: "Closed",
-//     [ReadyState.UNINSTANTIATED]: "Uninstantiated"
-// }[readyState];
-
-return (
-    <>
-        <span>The WebSocket is currently </span>
-        <p>{welcomeMessage}</p>
-        <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}/>
-        <button
-            className="bg-gray-300 px-3 py-1"
-            onClick={handleSubmit}>
-            Submit
-        </button>
-    </>
-);
-}
+                        ))}
+                    </div>
+                }
+                <input
+                    type="text"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}/>
+                <button
+                    className="bg-gray-300 px-3 py-1"
+                    onClick={handleSubmit}>
+                    Submit
+                </button>
+            </>
+        );
+    }
 ;
 
 export default ChatComponent;
