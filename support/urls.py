@@ -22,6 +22,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
+from backend.message.consumers import ChatConsumer
 from backend.message.views import MessageViewSet
 from backend.notification.consumers import TicketConsumer
 from backend.ticket.views import AssignTicketViewSet, TicketViewSet, TicketStatusChoicesListView
@@ -42,6 +43,7 @@ schema_view = get_schema_view(
 )
 websocket_urlpatterns = [
     path('ws/tickets/<ticket_id>/', TicketConsumer.as_asgi()),
+    path('ws/chat/<int:ticket_id>/', ChatConsumer.as_asgi()),
 ]
 
 urlpatterns = [

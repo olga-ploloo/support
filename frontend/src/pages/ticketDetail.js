@@ -46,22 +46,26 @@ const TicketsDetail = () => {
         getTicket();
     }
 
-    console.log(ticket.assigned_ticket)
+    // console.log(ticket.assigned_ticket)
     return (
         <>
             <Container>
                 <Row>
-                    <Col><h2>Ticket Detail № {ticket.id}</h2></Col><Col><h3>{ticketStatus}</h3></Col>
+                    <Col>
+                        <h2>Ticket Detail № {ticket.id}</h2>
+                    </Col>
+                    <Col>
+                        <h3>{ticketStatus}</h3>
+                    </Col>
+                    {/*{!ticket.assigned_ticket.assigned_support ? (*/}
+                    {/*    <AssignTicket assignTicketId={ticket.assigned_ticket.id}*/}
+                    {/*                  update={updateTicketInfo}/>*/}
+                    {/*) : (*/}
+                    {/*    <TicketUpdate ticketId={ticket.id}*/}
+                    {/*                  updateTicket={updateTicket}/>*/}
+                    {/*)*/}
+                    {/*}*/}
                 </Row>
-                {ticket.assigned_ticket.assigned_support ? (
-                    <td><TicketUpdate ticketId={ticket.id}
-                                      updateTicket={updateTicket}/></td>
-                ) : (
-                    <td><AssignTicket assignTicketId={ticket.assigned_ticket.id}
-                                      update={updateTicketInfo}/>
-                    </td>
-                )
-                }
                 <div className="single-ticket-info">
                     <Row>
                         <Col>
@@ -79,7 +83,7 @@ const TicketsDetail = () => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col >
+                        <Col>
                             <p>{ticket.description}</p>
                         </Col>
                         <Col>
@@ -99,7 +103,7 @@ const TicketsDetail = () => {
                     </Row>
                 </div>
                 <div>
-                    <Link className="modal-btn btn-more" to={`/tickets/${ticket.id}/`}>
+                    <Link className="modal-btn btn-more" to={`/chat/${ticket.id}/`}>
                         Open chat
                     </Link>
                 </div>

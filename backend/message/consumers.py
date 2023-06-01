@@ -19,19 +19,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['ticket_id']
         user = (self.scope['user'])
         self.group_name = f'chat_{self.room_name}'
-        # print(user)
+        print(self.group_name)
         # print('!!!!!!!!!!!!')
         # self.room_group_name = str(ticket_id)
         await self.channel_layer.group_add(self.group_name, self.channel_name)
+        print(self.channel_layer)
         await self.accept()
         # async_to_sync(self.channel_layer.group_add)(
         #     self.room_group_name,
         #     self.channel_name,
         # )
         # await self.send(text_data='hello? we connected!')
-        self.channel_layer.group_send(
+        await self.channel_layer.group_send(
             self.group_name,
             {
+                'type': 'send_message',
                 'message': 'hello? we connected!',
             }
         )
@@ -46,26 +48,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
         #     await self.disconnect(code)
 
     async def receive(self, text_data=None, bytes_data=None):
-        print(text_data)
+        print('reseived data' + text_data)
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
         user = self.scope['user']
         ticket_id = self.scope['url_route']['kwargs']['ticket_id']
 
         await self.save_message(user, message, ticket_id)
-        self.channel_layer.group_send(
+        await self.channel_layer.group_send(
             self.group_name,
             {
                 'type': 'send_message',
                 'message': message,
             }
         )
-        # await self.send(text_data=json.dumps({"message": message}))
 
     async def send_message(self, event):
         print('send message')
         message = event["message"]
-        await self.send(text_data=json.dumps({"message": message}))
+        text_data = json.dumps({"message": message})
+        print(type(text_data))
+        await self.send(text_data)
+
     # @database_sync_to_async
     # def get_messages(self):
     #     custom_serializers = MessageSerializer()
@@ -92,4 +96,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_message(self, author, message, ticket_id):
         ticket = Ticket.objects.get(id=ticket_id)
-        Message.objects.create(author=author, message=message, ticket=ticket)
+        Message.objects.create(author=author,
+                               message=message,
+                               ticket=ticket)

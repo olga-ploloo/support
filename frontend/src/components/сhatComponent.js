@@ -24,13 +24,18 @@ const ChatComponent = () => {
             shouldReconnect: (closeEvent) => true,
             onError: (error) => console.log("WebSocket encountered an error: " + error.text),
             onMessage: (event) => {
-                console.log("onmessage data " + event);
-                addMessage(event.toString());
+                let data = JSON.parse(event.data);
+                console.log('on message ' + data.message)
+                addMessage(data.message);
             }
         });
 
-        const addMessage = (message) => {
-            setMessageHistory((prevMessages) => [...prevMessages, message]);
+        const addMessage = (newMessage) => {
+            // setMessageHistory((prevMessages) => [...prevMessages, message]);
+            setMessageHistory(actualMessage => [...actualMessage, newMessage]);
+
+            console.log('add mesage to histiry')
+            console.log(messageHistory)
         };
         const getMessages = async () => {
             try {
@@ -47,6 +52,9 @@ const ChatComponent = () => {
 
         useEffect(() => {
             getMessages();
+            console.log('messageHistory:', messageHistory);
+            console.log('change');
+
         }, [])
         const handleSubmit = () => {
             // toDo: check for whitespace
@@ -59,13 +67,7 @@ const ChatComponent = () => {
             }
         };
 
-//
-// useEffect(() => {
-//     if (lastMessage !== null) {
-//         setReceivedMessages(prevMessages => [...prevMessages, lastMessage]);
-//     }
-// }, [lastMessage]);
-//
+
         return (
             <>
                 <h1>Chat</h1>
@@ -73,8 +75,8 @@ const ChatComponent = () => {
 
                 {messageHistory &&
                     <div>
-                        {messageHistory.map((message, index) => (
-                            <div className="message" key={index}>
+                        {messageHistory.slice().reverse().map((message, index) => (
+                            <div className="message" key={message.id}>
                                 <Row>
                                     <Col>
                                         {message.author}:
