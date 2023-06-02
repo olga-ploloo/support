@@ -8,30 +8,35 @@ import {Container, Row, Col} from "reactstrap";
 
 
 const TicketsDetail = () => {
-    const [ticket, setTicket] = useState("")
-    const [ticketStatus, setTicketStatus] = useState(ticket.status)
+    const [loading, setLoading] = useState(true);
+    const [ticket, setTicket] = useState(null)
+    const [ticketStatus, setTicketStatus] = useState(null)
     const {id} = useParams()
     const [isOpen, setIsOpen] = useState(false);
-    console.log(ticket)
+
 
     useEffect(() => {
         getTicket();
     }, [])
+
     const handleClick = () => {
         setIsOpen(true);
     };
     const handleClose = () => {
         setIsOpen(false);
     };
-    const getTicket = async () => {
+
+     const getTicket = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/${id}`);
             setTicket(response.data);
             setTicketStatus(response.data.status);
+            setLoading(false);
         } catch (error) {
             console.log(error)
         }
     }
+
 
     const updateTicket = async (status) => {
         try {
@@ -43,11 +48,14 @@ const TicketsDetail = () => {
         }
     }
 
-    const updateTicketInfo = () => {
-        getTicket();
+    const updateTicketInfo = (newData) => {
+        setTicket((prevState) => ({...prevState, assigned_ticket: newData}))
     }
 
-    // console.log(ticket.assigned_ticket)
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
     return (
         <>
             <Container>
@@ -58,12 +66,12 @@ const TicketsDetail = () => {
                     <Col>
                         <h3>{ticketStatus}</h3>
                     </Col>
-                    {!ticket.assigned_ticket.assigned_support.id ? (
-                        <AssignTicket assignTicketId={ticket.assigned_ticket.id}
-                                      update={updateTicketInfo}/>
-                    ) : (
+                    {ticket.assigned_ticket.assigned_support ? (
                         <TicketUpdate ticketId={ticket.id}
                                       updateTicket={updateTicket}/>
+                    ) : (
+                        <AssignTicket assignTicketId={ticket.assigned_ticket.id}
+                                      update={updateTicketInfo}/>
                     )
                     }
                 </Row>

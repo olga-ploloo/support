@@ -1,4 +1,4 @@
-import useWebSocket, from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import React, {useEffect, useState} from "react";
 import * as constants from "../constatns/ticketConstans";
 import {useParams} from "react-router-dom";
@@ -8,7 +8,7 @@ import {Col, Row} from "reactstrap";
 const ChatComponent = () => {
         const {id} = useParams()
         const [message, setMessage] = useState("");
-        const [messageHistory, setMessageHistory] = useState([]);
+        const [messageHistory, setMessageHistory] = useState(null);
         const socketUrl = `ws://${constants.HOST}/ws/chat/${id}/?token=${localStorage.access}`;
 
         const {
