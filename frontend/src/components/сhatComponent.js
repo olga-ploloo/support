@@ -1,4 +1,4 @@
-import useWebSocket, {ReadyState} from "react-use-websocket";
+import useWebSocket, from "react-use-websocket";
 import React, {useEffect, useState} from "react";
 import * as constants from "../constatns/ticketConstans";
 import {useParams} from "react-router-dom";
@@ -31,11 +31,10 @@ const ChatComponent = () => {
         });
 
         const addMessage = (newMessage) => {
-            // setMessageHistory((prevMessages) => [...prevMessages, message]);
-            setMessageHistory(actualMessage => [...actualMessage, newMessage]);
+            setMessageHistory(actualMessage => [newMessage, ...actualMessage]);
 
             console.log('add mesage to histiry')
-            console.log(messageHistory)
+            console.log(newMessage)
         };
         const getMessages = async () => {
             try {
@@ -52,27 +51,21 @@ const ChatComponent = () => {
 
         useEffect(() => {
             getMessages();
-            console.log('messageHistory:', messageHistory);
-            console.log('change');
 
         }, [])
         const handleSubmit = () => {
             // toDo: check for whitespace
             if (message) {
                 sendJsonMessage({
-                    // name: "chat_message",
                     message: message,
                 });
                 setMessage("");
             }
         };
 
-
         return (
             <>
                 <h1>Chat</h1>
-                <p>{getWebSocket}</p>
-
                 {messageHistory &&
                     <div>
                         {messageHistory.slice().reverse().map((message, index) => (
@@ -84,10 +77,12 @@ const ChatComponent = () => {
                                     <Col>
                                         {message.message}
                                     </Col>
+                                    <Col>
+                                        {message.id}
+                                    </Col>
 
                                 </Row>
                             </div>
-
                         ))}
                     </div>
                 }

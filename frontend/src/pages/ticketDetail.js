@@ -12,6 +12,7 @@ const TicketsDetail = () => {
     const [ticketStatus, setTicketStatus] = useState(ticket.status)
     const {id} = useParams()
     const [isOpen, setIsOpen] = useState(false);
+    console.log(ticket)
 
     useEffect(() => {
         getTicket();
@@ -57,14 +58,14 @@ const TicketsDetail = () => {
                     <Col>
                         <h3>{ticketStatus}</h3>
                     </Col>
-                    {/*{!ticket.assigned_ticket.assigned_support ? (*/}
-                    {/*    <AssignTicket assignTicketId={ticket.assigned_ticket.id}*/}
-                    {/*                  update={updateTicketInfo}/>*/}
-                    {/*) : (*/}
-                    {/*    <TicketUpdate ticketId={ticket.id}*/}
-                    {/*                  updateTicket={updateTicket}/>*/}
-                    {/*)*/}
-                    {/*}*/}
+                    {!ticket.assigned_ticket.assigned_support.id ? (
+                        <AssignTicket assignTicketId={ticket.assigned_ticket.id}
+                                      update={updateTicketInfo}/>
+                    ) : (
+                        <TicketUpdate ticketId={ticket.id}
+                                      updateTicket={updateTicket}/>
+                    )
+                    }
                 </Row>
                 <div className="single-ticket-info">
                     <Row>
