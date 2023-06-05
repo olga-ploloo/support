@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import '../LoginForm.css';
+import {LoginContext} from '../App';
 import axios from "axios";
 import {useNavigate, useLocation} from 'react-router-dom';
 import * as constants from "../constatns/ticketConstans";
@@ -7,7 +8,7 @@ import {setAuthToken} from "../services/authService";
 import {Alert, Label} from "reactstrap";
 
 const Login = () => {
-    // const [loggedIn, setLoggedIn] = useContext(LoginContext)
+    const [loggedIn, setLoggedIn] = useContext(LoginContext)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(false);
@@ -25,6 +26,7 @@ const Login = () => {
                 localStorage.setItem('access', response.data.access);
                 localStorage.setItem('refresh', response.data.refresh);
                 setAuthToken(response.data.access);
+                setLoggedIn(true)
                navigate(
                     location?.state?.previousUrl
                         ? location.state.previousUrl

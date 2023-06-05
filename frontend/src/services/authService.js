@@ -7,3 +7,8 @@ export const setAuthToken = token => {
    else
        delete axios.defaults.headers.common["Authorization"];
 }
+
+export const clearAuthToken = () => {
+  localStorage.removeItem('access');
+  localStorage.removeItem('refresh');
+};

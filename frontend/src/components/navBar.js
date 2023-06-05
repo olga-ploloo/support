@@ -29,7 +29,7 @@ const NavBar = () => {
                                         href={'/login'}
                                         onClick={() => {
                                             setLoggedIn(false);
-                                            localStorage.clear();}}
+                                        }}
                                         className="">
                                         Logout
                                     </Nav.Link>
