@@ -1,22 +1,31 @@
 import {Card, CardBody, CardTitle, ListGroup, ListGroupItem} from "reactstrap";
-import {Link} from "react-router-dom";
+import {Link, Navigate} from "react-router-dom";
 import moment from "moment/moment";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom';
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
+import {LoginContext} from "../App";
 
 const LastTicketsCard = () => {
     const [tickets, setTickets] = useState([]);
+    const [loggedIn, setLoggedIn] = useContext(LoginContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getTickets();
     }, [])
+
     const getTickets = async () => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/`);
             setTickets(response.data.results);
         } catch (error) {
             console.log(error)
+            if (error.response.status === 401) {
+                setLoggedIn(false);
+                navigate('/login');
+            }
         }
     };
 
@@ -40,7 +49,6 @@ const LastTicketsCard = () => {
                                     № {ticket.id} {moment(ticket.created_at).format('DD/MM/YYYY')}: {ticket.status}
                                 </ListGroupItem>
                             </Link>
-
                         ))
                     )}
                 </ListGroup>

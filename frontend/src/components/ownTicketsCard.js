@@ -1,12 +1,15 @@
 import {Card, CardBody, CardTitle, ListGroup, ListGroupItem} from "reactstrap";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import moment from "moment/moment";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
+import {LoginContext} from "../App";
 
 const OwnTicketsCard = () => {
      const [tickets, setTickets] = useState([]);
+     const [loggedIn, setLoggedIn] = useContext(LoginContext);
+     const navigate = useNavigate();
 
        useEffect(() => {
         getOwnTickets();
@@ -18,6 +21,10 @@ const OwnTicketsCard = () => {
             setTickets(response.data.results);
         } catch (error) {
             console.log(error)
+            if (error.response.status === 401) {
+                setLoggedIn(false);
+                navigate('/login');
+            }
         }
     };
 
