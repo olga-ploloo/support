@@ -17,3 +17,11 @@ class MessageSerializer(serializers.ModelSerializer):
                 'required': True,
             },
         }
+
+
+class MessageListSerializer(MessageSerializer):
+    author_id = serializers.IntegerField(source='author.id')
+
+    class Meta:
+        model = Message
+        fields = '__all__'

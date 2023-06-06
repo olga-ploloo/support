@@ -4,21 +4,20 @@ import * as constants from "../constatns/ticketConstans";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {Col, Row} from "reactstrap";
+import MessageList from "../components/messageList";
+import jwt_decode from 'jwt-decode';
 
-const ChatComponent = () => {
+
+const Chat = () => {
         const {id} = useParams()
         const [message, setMessage] = useState("");
-        const [messageHistory, setMessageHistory] = useState(null);
+        const [messageHistory, setMessageHistory] = useState([]);
+        const [currentUserId, setCurrentUserId] = useState(null);
+
+        const token = localStorage.access;
         const socketUrl = `ws://${constants.HOST}/ws/chat/${id}/?token=${localStorage.access}`;
 
-        const {
-            sendMessage,
-            sendJsonMessage,
-            lastMessage,
-            lastJsonMessage,
-            readyState,
-            getWebSocket,
-        } = useWebSocket(socketUrl, {
+        const socket = useWebSocket(socketUrl, {
             onOpen: () => console.log('Connected'),
             onClose: () => console.log('Disconnected'),
             shouldReconnect: (closeEvent) => true,
@@ -30,12 +29,20 @@ const ChatComponent = () => {
             }
         });
 
-        const addMessage = (newMessage) => {
-            setMessageHistory(actualMessage => [newMessage, ...actualMessage]);
 
-            console.log('add mesage to histiry')
-            console.log(newMessage)
+
+        // Decode the JWT token to get the user information
+        const getCurrentUserInfo = () => {
+            if (token) {
+                const decodedToken = jwt_decode(token);
+                setCurrentUserId(decodedToken.user_id)
+            }
+        }
+
+        const addMessage = (newMessage) => {
+            setMessageHistory(actualMessage => [newMessage, ...(actualMessage ?? [])]);
         };
+
         const getMessages = async () => {
             try {
                 const response = await axios.get(`${constants.API_URL}/messages/`, {
@@ -49,43 +56,26 @@ const ChatComponent = () => {
             }
         }
 
-        useEffect(() => {
-            getMessages();
-
-        }, [])
         const handleSubmit = () => {
             // toDo: check for whitespace
             if (message) {
-                sendJsonMessage({
+                socket.sendJsonMessage({
                     message: message,
                 });
                 setMessage("");
             }
         };
 
+        useEffect(() => {
+            getMessages();
+            getCurrentUserInfo();
+        }, [token])
+
         return (
             <>
                 <h1>Chat</h1>
-                {messageHistory &&
-                    <div>
-                        {messageHistory.slice().reverse().map((message, index) => (
-                            <div className="message" key={message.id}>
-                                <Row>
-                                    <Col>
-                                        {message.author}:
-                                    </Col>
-                                    <Col>
-                                        {message.message}
-                                    </Col>
-                                    <Col>
-                                        {message.id}
-                                    </Col>
-
-                                </Row>
-                            </div>
-                        ))}
-                    </div>
-                }
+                <MessageList messageHistory={messageHistory}
+                             currentUserId={currentUserId}/>
                 <input
                     type="text"
                     value={message}
@@ -100,4 +90,4 @@ const ChatComponent = () => {
     }
 ;
 
-export default ChatComponent;
+export default Chat;

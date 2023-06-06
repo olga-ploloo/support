@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, FormGroup, Label, Col, Input, FormText, Button} from "reactstrap";
+import {Form, FormGroup, Label, Col, Input, Button} from "reactstrap";
 import axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import * as constants from "../constatns/ticketConstans";
@@ -8,7 +8,6 @@ import ActionCompleteModal from "./modal";
 
 const TicketAdd = () => {
     const [title, setTitle] = useState("")
-    const [author, setAuthor] = useState("")
     const [description, setDescription] = useState("")
     const [image, setImage] = useState(null)
     const [isSubmitted, setIsSubmitted] = useState(false);

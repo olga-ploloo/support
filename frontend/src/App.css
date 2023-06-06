@@ -187,3 +187,36 @@
 .message{
   display: flex;
 }
+
+.chat-message-list {
+  border-style: ridge;
+}
+
+.chat-message-row {
+  display: flex;
+  flex:1;
+  align-items: baseline;
+}
+
+.chat-message-row.user-message {
+  flex-direction: row-reverse;
+}
+
+.chat-message {
+  background-color: #ece9e9;
+  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+  border-radius: 1.125rem;
+  text-align: left;
+}
+
+.chat-message-status {
+  align-self: end;
+  justify-self: flex-end;
+  margin-bottom: 1rem;
+}
+
+.chat-message-spacer {
+  flex-grow: 1;
+}

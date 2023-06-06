@@ -13,7 +13,7 @@ import {clearAuthToken, setAuthToken} from "./services/authService";
 import axios from "axios";
 import * as constants from "./constatns/ticketConstans";
 import OwnTickets from "./pages/ownTickets";
-import ChatComponent from "./components/сhatComponent";
+import Chat from "./pages/сhat";
 
 export const LoginContext = createContext();
 
@@ -63,7 +63,7 @@ function App() {
                     <Route exact path="/tickets/:id" element={<TicketDetail/>}/>
                     <Route exact path="/tickets/own_tickets" element={<OwnTickets/>}/>
                     <Route exac path="/login" element={<Login/>}/>
-                    <Route exac path="/chat/:id" element={<ChatComponent/>}/>
+                    <Route exac path="/chat/:id" element={<Chat/>}/>
                 </Routes>
             </Router>
         </LoginContext.Provider>

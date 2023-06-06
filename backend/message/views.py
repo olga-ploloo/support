@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Message
-from .serializers import MessageSerializer
+from .serializers import MessageSerializer, MessageListSerializer
 from .services import created_message_notification
 
 
@@ -18,8 +18,8 @@ class MessageViewSet(mixins.CreateModelMixin,
 
     def get_permissions(self) -> list:
         permission_classes = [IsAuthenticated]
-        if self.action in ['list', 'retrieve']:
-            permission_classes = [IsAuthenticated, IsAdminUser]
+        # if self.action in ['list', 'retrieve']:
+        #     permission_classes = [IsAuthenticated, IsAdminUser]
 
         return [permission() for permission in permission_classes]
 
@@ -27,7 +27,7 @@ class MessageViewSet(mixins.CreateModelMixin,
         """Get the ticket number and return the message list for that ticket."""
         ticket_id = request.query_params.get('ticket')
         queryset = Message.objects.filter(ticket_id=ticket_id)
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = MessageListSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def perform_create(self, serializer) -> None:
