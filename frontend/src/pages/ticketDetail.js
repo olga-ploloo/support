@@ -37,7 +37,6 @@ const TicketsDetail = () => {
         }
     }
 
-
     const updateTicket = async (status) => {
         try {
             const response = await axios.put(`${constants.API_URL}/tickets/${id}/`,
@@ -71,7 +70,8 @@ const TicketsDetail = () => {
                                       updateTicket={updateTicket}/>
                     ) : (
                         <AssignTicket assignTicketId={ticket.assigned_ticket.id}
-                                      update={updateTicketInfo}/>
+                                      update={updateTicketInfo}
+                                      ticketId={ticket.id}/>
                     )
                     }
                 </Row>

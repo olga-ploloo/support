@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import * as constants from "../constatns/ticketConstans";
 import ReactPaginate from 'react-paginate';
@@ -13,6 +13,10 @@ const TicketsList = () => {
     const [pageCount, setPageCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
 
+    useEffect(() => {
+        getTickets();
+    }, [])
+
     const getTickets = async (pageNumber = 1) => {
         try {
             const response = await axios.get(`${constants.API_URL}/tickets/?page=${pageNumber}`);
@@ -23,19 +27,30 @@ const TicketsList = () => {
         }
     };
 
-    useEffect(() => {
-        getTickets();
-    }, [])
-
     const handlePageChange = (selectedPage) => {
         const pageNumber = selectedPage.selected + 1;
         setCurrentPage(selectedPage.selected);
         getTickets(pageNumber);
     };
 
-    const updateTicketsList = () => {
-         getTickets()
+    const updateTicketsList = (data) => {
+        setTickets(prevState => {
+            return prevState.map(ticket => {
+                if (ticket.id === data.ticketId) {
+                    return {
+                        ...ticket, assigned_ticket:
+                            {
+                                ...ticket.assigned_ticket,
+                                assigned_support: data.assigned_support,
+                                is_assign: data.is_assign
+                            }
+                    };
+                }
+                return ticket;
+            });
+        });
     }
+
     const TableHeader = () => {
         return (
             <thead>
@@ -71,7 +86,8 @@ const TicketsList = () => {
                         <td>{ticket.author}</td>
                         {!ticket.assigned_ticket.assigned_support ? (
                             <td><AssignTicket assignTicketId={ticket.assigned_ticket.id}
-                                update={updateTicketsList}/>
+                                              update={updateTicketsList}
+                                              ticketId={ticket.id}/>
                             </td>
                         ) : (
                             <td>{ticket.assigned_ticket.assigned_support}</td>
@@ -102,8 +118,7 @@ const TicketsList = () => {
                 activeClassName="active"/>
         </div>
     );
-}
-;
+};
 export default TicketsList;
 
 
