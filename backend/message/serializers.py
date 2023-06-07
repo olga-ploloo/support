@@ -8,6 +8,7 @@ from .models import Message
 class MessageSerializer(serializers.ModelSerializer):
     ticket = serializers.PrimaryKeyRelatedField(queryset=Ticket.objects.all(), many=False)
     author = serializers.CharField(default=serializers.CurrentUserDefault())
+    author_id = serializers.IntegerField(source='author.id')
 
     class Meta:
         model = Message
