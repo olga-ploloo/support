@@ -5,7 +5,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 from backend.message.models import Message
 from backend.message.serializers import MessageSerializer
-from backend.ticket.models import Ticket
+from backend.ticket.models import Ticket, AssignTicket
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -16,10 +16,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         print("WebSocket Chat Connected!")
-        self.room_name = self.scope['url_route']['kwargs']['ticket_id']
+        ticket_id = self.scope['url_route']['kwargs']['ticket_id']
+        self.room_name = ticket_id
         self.group_name = f'chat_{self.room_name}'
-        await self.channel_layer.group_add(self.group_name, self.channel_name)
-        await self.accept()
+        user = self.scope['user']
+        ticket = await database_sync_to_async(Ticket.objects.get)(id=ticket_id)
+        assign_ticket = await database_sync_to_async(AssignTicket.objects.get)(ticket=ticket_id)
+        if user.id in [ticket.author_id, assign_ticket.assigned_support_id]:
+            await self.channel_layer.group_add(self.group_name, self.channel_name)
+            await self.accept()
+        else:
+            await self.close()
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(

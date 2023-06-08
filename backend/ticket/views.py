@@ -113,3 +113,13 @@ class TicketStatusChoicesListView(APIView):
     def get(self, request):
         choices = Ticket.TicketStatus.choices
         return Response(choices)
+
+
+class TicketPermissionToChat(APIView):
+    """Receive ticket_id and current user_id, check is user owner or assigned support and return bool."""
+    def get(self, request) -> Response:
+        user_id = request.query_params.get('user_id')
+        ticket = Ticket.objects.get(id=request.query_params.get('ticket'))
+        if int(user_id) in [ticket.author_id, ticket.assigned_ticket.assigned_support_id]:
+            return Response({'allow': True})
+        return Response({'allow': False})

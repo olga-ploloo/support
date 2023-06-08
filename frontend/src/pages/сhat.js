@@ -1,11 +1,11 @@
 import useWebSocket from "react-use-websocket";
 import React, {useEffect, useState} from "react";
 import * as constants from "../constatns/ticketConstans";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import MessageList from "../components/messageList";
 import jwt_decode from 'jwt-decode';
-import {Button, Container, Input, InputGroup} from "reactstrap";
+import {Container} from "reactstrap";
 import {IconButton, TextareaAutosize, TextField} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send"
 
@@ -16,6 +16,7 @@ const Chat = () => {
     const [currentUserId, setCurrentUserId] = useState(null);
     const [pageNumber, setPageNumber] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [isMember, setIsMember] = useState(false);
 
     const token = localStorage.access;
     const socketUrl = `ws://${constants.HOST}/ws/chat/${id}/?token=${localStorage.access}`;
@@ -31,18 +32,6 @@ const Chat = () => {
             addMessage(data.message);
         }
     });
-
-    // Decode the JWT token to get the user information
-    const getCurrentUserInfo = () => {
-        if (token) {
-            const decodedToken = jwt_decode(token);
-            setCurrentUserId(decodedToken.user_id)
-        }
-    }
-
-    const addMessage = (newMessage) => {
-        setMessageHistory(actualMessage => [newMessage, ...(actualMessage ?? [])]);
-    };
 
     const getMessages = async () => {
         try {
@@ -60,6 +49,33 @@ const Chat = () => {
             console.log(error)
         }
     }
+
+    // Сheck if the current user has access to this chat
+    const getChatPermission = async () => {
+        try {
+            const response = await axios.get(`${constants.API_URL}/chat_permission/`, {
+                params: {
+                    ticket: id,
+                    user_id: currentUserId
+                }
+            });
+            setIsMember(response.data.allow);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // Decode the JWT token to get the user information
+    const getCurrentUserInfo = () => {
+        if (token) {
+            const decodedToken = jwt_decode(token);
+            setCurrentUserId(decodedToken.user_id)
+        }
+    }
+
+    const addMessage = (newMessage) => {
+        setMessageHistory(actualMessage => [newMessage, ...(actualMessage ?? [])]);
+    };
 
     const loadMoreMessages = () => {
         if (hasMore) {
@@ -84,6 +100,22 @@ const Chat = () => {
     useEffect(() => {
         getMessages();
     }, [pageNumber]);
+
+    useEffect(() => {
+        if (currentUserId) {
+            console.log(currentUserId)
+            getChatPermission();
+        }
+    }, [currentUserId]);
+
+    if (!isMember) {
+        return (
+            <div>
+                <h1>Access Denied</h1>
+                <p>You are not authorized to access this page.</p>
+            </div>
+        )
+    }
 
     return (
         <div className="chat-page">
