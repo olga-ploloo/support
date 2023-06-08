@@ -1,8 +1,8 @@
-import {Col, Row, Container} from "reactstrap";
+import {Col, Row, Container, Button} from "reactstrap";
 import React from "react";
 import moment from "moment/moment";
 
-const MessageList = ({messageHistory, currentUserId}) => {
+const MessageList = ({messageHistory, currentUserId, loadMoreMessages, hasMore}) => {
     const isCurrentUserMessage = (message) => {
         return message.author_id === currentUserId;
     };
@@ -11,6 +11,15 @@ const MessageList = ({messageHistory, currentUserId}) => {
         <>
             {messageHistory &&
                 <Container className="chat-message-list">
+                    {hasMore && (
+                        <div className="load-more-button">
+                            <Button
+                                className="modal-btn confirm-btn"
+                                onClick={loadMoreMessages}>
+                                Load More
+                            </Button>
+                        </div>
+                    )}
                     {messageHistory.slice().reverse().map((message) => (
                         <div className="message" key={message.id}>
                             <div

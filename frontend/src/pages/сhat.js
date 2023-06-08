@@ -9,12 +9,13 @@ import {Button, Container, Input, InputGroup} from "reactstrap";
 import {IconButton, TextareaAutosize, TextField} from "@mui/material";
 import SendIcon from "@mui/icons-material/Send"
 
-
 const Chat = () => {
     const {id} = useParams()
     const [message, setMessage] = useState("");
     const [messageHistory, setMessageHistory] = useState([]);
     const [currentUserId, setCurrentUserId] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
 
     const token = localStorage.access;
     const socketUrl = `ws://${constants.HOST}/ws/chat/${id}/?token=${localStorage.access}`;
@@ -48,13 +49,23 @@ const Chat = () => {
             const response = await axios.get(`${constants.API_URL}/messages/`, {
                 params: {
                     ticket: id,
+                    page: pageNumber
                 }
-            });
-            setMessageHistory(response.data)
+            })
+            if (response.data.next === null) {
+                setHasMore(false);
+            }
+            setMessageHistory([...messageHistory, ...response.data.results]);
         } catch (error) {
             console.log(error)
         }
     }
+
+    const loadMoreMessages = () => {
+        if (hasMore) {
+            setPageNumber(pageNumber + 1);
+        }
+    };
 
     const handleSubmit = () => {
         // toDo: check for whitespace
@@ -67,16 +78,21 @@ const Chat = () => {
     };
 
     useEffect(() => {
-        getMessages();
         getCurrentUserInfo();
     }, [token])
+
+    useEffect(() => {
+        getMessages();
+    }, [pageNumber]);
 
     return (
         <div className="chat-page">
             <h1>Chat</h1>
             <Container className="chat-container">
                 <MessageList messageHistory={messageHistory}
-                             currentUserId={currentUserId}/>
+                             currentUserId={currentUserId}
+                             loadMoreMessages={loadMoreMessages}
+                             hasMore={hasMore}/>
                 <div className="chat-send-message">
                     <TextareaAutosize
                         value={message}

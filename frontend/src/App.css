@@ -274,3 +274,7 @@
 .chat-user-input:focus{
 outline: none;
 }
+
+.load-more-button{
+  padding: 2vh;
+}

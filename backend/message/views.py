@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Message
+from .pagination import MessagePagination
 from .serializers import MessageSerializer, MessageListSerializer
 from .services import created_message_notification
 
@@ -13,8 +14,9 @@ class MessageViewSet(mixins.CreateModelMixin,
                      mixins.ListModelMixin,
                      mixins.DestroyModelMixin,
                      GenericViewSet):
-    queryset = Message.objects.all()
+    queryset = Message.objects.select_related('author')
     serializer_class = MessageSerializer
+    pagination_class = MessagePagination
 
     def get_permissions(self) -> list:
         permission_classes = [IsAuthenticated]
@@ -23,12 +25,14 @@ class MessageViewSet(mixins.CreateModelMixin,
 
         return [permission() for permission in permission_classes]
 
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs) -> Response:
         """Get the ticket number and return the message list for that ticket."""
         ticket_id = request.query_params.get('ticket')
-        queryset = Message.objects.filter(ticket_id=ticket_id)
-        serializer = MessageListSerializer(queryset, many=True)
-        return Response(serializer.data)
+        queryset = self.queryset.filter(ticket_id=ticket_id)
+        paginator = self.pagination_class()
+        result_page = paginator.paginate_queryset(queryset, request)
+        serializer = MessageListSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def perform_create(self, serializer) -> None:
         """Create notice for support service when created new message from customer."""
