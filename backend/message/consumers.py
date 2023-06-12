@@ -23,7 +23,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ticket = await database_sync_to_async(Ticket.objects.get)(id=ticket_id)
         assign_ticket = await database_sync_to_async(AssignTicket.objects.get)(ticket=ticket_id)
         if user.id in [ticket.author_id, assign_ticket.assigned_support_id]:
-            await self.channel_layer.group_add(self.group_name, self.channel_name)
+            await self.channel_layer.group_add(
+                self.group_name,
+                self.channel_name
+            )
             await self.accept()
         else:
             await self.close()
@@ -42,7 +45,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json["message"]
         user = self.scope['user']
         ticket_id = self.scope['url_route']['kwargs']['ticket_id']
-        new_message = await self.save_message(user, message, ticket_id)
+        new_message = await self.save_message(
+            user,
+            message,
+            ticket_id
+        )
         serialized_message = MessageSerializer(new_message).data
 
         await self.channel_layer.group_send(
@@ -61,6 +68,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def save_message(self, author, message, ticket_id):
         ticket = Ticket.objects.get(id=ticket_id)
-        return Message.objects.create(author=author,
-                                      message=message,
-                                      ticket=ticket)
+        return Message.objects.create(
+            author=author,
+            message=message,
+            ticket=ticket
+        )
