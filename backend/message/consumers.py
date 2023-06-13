@@ -10,7 +10,7 @@ from backend.ticket.models import Ticket, AssignTicket
 
 class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.room_name = None
         self.group_name = None
 
@@ -61,8 +61,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def send_message(self, event):
-        message = event["message"]
-        text_data = json.dumps({"message": message})
+        text_data = json.dumps({"message": event["message"]})
         await self.send(text_data)
 
     @database_sync_to_async

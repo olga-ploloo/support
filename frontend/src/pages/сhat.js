@@ -28,7 +28,6 @@ const Chat = () => {
         onError: (error) => console.log("WebSocket encountered an error: " + error.text),
         onMessage: (event) => {
             let data = JSON.parse(event.data);
-            console.log('on message ' + data.message)
             addMessage(data.message);
         }
     });
