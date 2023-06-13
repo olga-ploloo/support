@@ -13,6 +13,7 @@ import axios from "axios";
 import * as constants from "./constatns/ticketConstans";
 import OwnTickets from "./pages/ownTickets";
 import Chat from "./pages/сhat";
+import SignUp from "./pages/signUp";
 
 export const LoginContext = createContext();
 
@@ -63,6 +64,7 @@ function App() {
                     <Route exact path="/tickets/own_tickets" element={<OwnTickets/>}/>
                     <Route exac path="/login" element={<Login/>}/>
                     <Route exac path="/chat/:id" element={<Chat/>}/>
+                    <Route exac path="/signup" element={<SignUp/>}/>
                 </Routes>
             </Router>
         </LoginContext.Provider>

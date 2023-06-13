@@ -9,12 +9,13 @@ import Notification from "./notification";
 const NavBar = () => {
     const location = useLocation();
     const isLoginPage = location.pathname === '/login';
+    const isSignUpPage = location.pathname === '/signup'
     const [loggedIn, setLoggedIn] = useContext(LoginContext);
 
     useEffect(() => {
     }, [location.pathname, loggedIn]);
 
-    if (!isLoginPage) {
+    if (!isLoginPage && !isSignUpPage) {
         return (
             <div>
                 <Navbar bg="light" expand="lg">
