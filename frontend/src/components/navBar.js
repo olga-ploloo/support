@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import {useLocation} from "react-router-dom";
 import {LoginContext} from '../App';
+import Notification from "./notification";
 
 const NavBar = () => {
     const location = useLocation();
@@ -40,7 +41,7 @@ const NavBar = () => {
                                         Login
                                     </Nav.Link>
                                 )}
-
+                                <Nav><Notification/></Nav>
                             </Nav>
                         </Navbar.Collapse>
                     </Container>

@@ -24,6 +24,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from backend.message.consumers import ChatConsumer
 from backend.message.views import MessageViewSet
+from backend.notification.consumers import NotificationConsumer
 from backend.ticket.views import AssignTicketViewSet, TicketViewSet, TicketStatusChoicesListView, TicketPermissionToChat
 from backend.user.views import ActivateUser, MyTokenObtainPairView, UserLogoutView
 
@@ -42,6 +43,7 @@ schema_view = get_schema_view(
 )
 websocket_urlpatterns = [
     path('ws/chat/<int:ticket_id>/', ChatConsumer.as_asgi()),
+    path('ws/notifications/', NotificationConsumer.as_asgi()),
 ]
 
 urlpatterns = [

@@ -1,90 +1,30 @@
 import json
 
-from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
-from channels.db import database_sync_to_async
-from asgiref.sync import async_to_sync, sync_to_async
-from channels.layers import get_channel_layer
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AnonymousUser
-
-from backend.notification.models import Notification
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 
-# @database_sync_to_async
-# def create_notification(receiver, typeof="ticket_created", status="unread"):
-#     notification_to_create = Notification.objects.create(user_revoker=receiver, type_of_notification=typeof)
-#     return (notification_to_create.user_receiver.username, notification_to_create.type_of_notification)
-#
-#
-# @database_sync_to_async
-# def get_user(user_id):
-#     try:
-#         return get_user_model().objects.get(id=user_id)
-#     except:
-#         return AnonymousUser()
+class NotificationConsumer(AsyncWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.group_name = None
 
-
-class TicketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print('connection')
-        self.ticket_id = self.scope['url_route']['kwargs']['ticket_id']
-        await self.channel_layer.group_add(
-            self.ticket_id,
-            self.channel_name
-        )
-        await self.accept()
+        print("WebSocket Chat Connected!")
+        user = self.scope['user']
+        self.group_name = f'user_{user.id}'
+        if user.is_authenticated:
+            await self.channel_layer.group_add(self.group_name, self.channel_name)
+            await self.accept()
+        else:
+            await self.close()
 
-    async def disconnect(self, close_code):
-        # Удалите соединение из группы каналов
+    async def disconnect(self, code):
         await self.channel_layer.group_discard(
-            self.ticket_id,
+            self.group_name,
             self.channel_name
         )
+        print("WebSocket Chat Disconnected!")
 
-    async def receive(self, text_data):
-        # Обработка входящих сообщений
-        pass
-
-    async def send_notification(self, event):
-        print('sended')
-        # Отправка уведомления в реальном времени
-        notification = event['notification']
-
-        # Отправить уведомление по WebSocket соединению
-        await self.send(text_data=notification)
-
-    #
-    #     # Send message to WebSocket
-    #     await self.send(text_data=json.dumps({"message": message}))
-
-    #
-    #
-    # async def connect(self):
-    #     self.group_name = 'notification'
-    #     await self.channel_layer.group_add(self.group_name, self.channel_name)
-    #     await self.accept()
-    #
-    #
-    # async def disconnect(self, close_code):
-    #     await self.channel_layer.group_discard(
-    #         self.group_name,
-    #         self.channel_name)
-
-    # # вызывается когда метод получен из веб сокета
-    # async def receive(self, text_data):
-    #     text_data_json = json.loads(text_data)
-    #     message = text_data_json["message"]
-    #     event = {
-    #         'type': 'send_message',
-    #         'message': message
-    #     }
-    #
-    #     await self.channel_layer.group_send(
-    #         self.group_name,
-    #         event)
-    #
-    # async def send_notification(self, event):
-    #     message = event["message"]
-    #
-    #     # Send message to WebSocket
-    #     await self.send(text_data=json.dumps({"message": message}))
+    async def notify(self, event):
+        text_data = json.dumps({"message": event["message"]})
+        await self.send(text_data)
