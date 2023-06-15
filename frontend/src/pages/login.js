@@ -2,7 +2,7 @@ import React, {useContext, useState} from "react";
 import '../LoginForm.css';
 import {LoginContext} from '../App';
 import axios from "axios";
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate, useLocation, Link} from 'react-router-dom';
 import * as constants from "../constatns/ticketConstans";
 import {setAuthToken} from "../services/authService";
 import {Alert, Label} from "reactstrap";
@@ -66,16 +66,14 @@ const Login = () => {
                         placeholder="Password"
                         required
                         onChange={(e) => setPassword(e.target.value)}/>
-                    <p className="login-animation login-a5">
-                        {/*<a href="#">*/}
-                        {/*    Forgot Password*/}
-                        {/*</a>*/}
-                    </p>
                     {error &&
                         <Alert color="danger">{error}</Alert>}
-                    <button type="submit" className="login-animation login-a6">
+                    <button type="submit" className="form-gradient-button login-animation login-a5">
                         LOGIN
                     </button>
+                     <p className="login-animation login-a6">
+                        <Link to={`/signup`}>Don't have an account?</Link>
+                    </p>
                 </form>
             </div>
             <div className="login-right"></div>
