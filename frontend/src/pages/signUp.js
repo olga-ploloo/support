@@ -3,9 +3,8 @@ import '../LoginForm.css';
 import axios from "axios";
 import {useNavigate, useLocation} from 'react-router-dom';
 import * as constants from "../constatns/ticketConstans";
-import {TextField} from "@mui/material";
+import {TextField, CircularProgress} from "@mui/material";
 import {Alert} from "reactstrap";
-
 import SignUpCompleteModal from "../components/SignUpCompleteModal";
 
 const SignUp = () => {
@@ -22,14 +21,13 @@ const SignUp = () => {
         password2: ''
     })
     const navigate = useNavigate();
-    const location = useLocation();
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [newUserEmail, setNewUserEmail] = useState("");
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         let formField = new FormData()
         formField.append('username', input.username)
         formField.append('email', input.email)
@@ -45,10 +43,12 @@ const SignUp = () => {
             const errorFields = (Object.keys(error.response.data))
             errorFields.map((field) => (
             setError(prev => ({
-                ...prev,
-                [field]: error.response.data[field]})
+                    ...prev,
+                    [field]: error.response.data[field]
+                })
             )))
         }
+        setLoading(false)
     }
 
     const onInputChange = e => {
@@ -62,11 +62,9 @@ const SignUp = () => {
     }
 
     const validateInput = e => {
-
         let {name, value} = e.target;
         setError(prev => {
             const stateObj = {...prev, [name]: ""};
-
             switch (name) {
                 case "username":
                     if (!value) {
@@ -100,7 +98,7 @@ const SignUp = () => {
         });
     }
 
-  const closeModal = () => {
+    const closeModal = () => {
         setIsSubmitted(false)
         navigate("/login")
     };
@@ -113,27 +111,27 @@ const SignUp = () => {
                     <h2 className="login-animation login-a1">
                         Create Your Account
                     </h2>
-                    <h4 className="login-animation login-a2">
-
+                    <h4 className="login-animation login-a1">
+                        Fill in the form
                     </h4>
                 </div>
                 <form className="sign-up-form" onSubmit={handleSubmit}>
-
                     <TextField
                         required
                         label="Name"
-                        className="sign-up-input"
+                        className="login-a2"
+                        margin="dense"
                         name="username"
                         type="username"
                         value={input.username}
                         onChange={onInputChange}
                         onBlur={validateInput}/>
                     {error.username && <Alert color="danger">{error.username}</Alert>}
-
                     <TextField
                         required
                         label="Email"
-                        className="sign-up-input"
+                        className="login-a3"
+                        margin="dense"
                         type="email"
                         name="email"
                         value={input.email}
@@ -144,7 +142,8 @@ const SignUp = () => {
                     <TextField
                         required
                         label="Password"
-                        className="sign-up-input"
+                        classeame="login-a4"
+                        margin="dense"
                         type="password"
                         name="password"
                         value={input.password}
@@ -155,22 +154,28 @@ const SignUp = () => {
                     <TextField
                         required
                         label="Confirm Password"
-                        className="sign-up-input"
+                        className="login-a5"
+                        margin="dense"
                         type="password"
                         name="password2"
                         value={input.password2}
                         onChange={onInputChange}
                         onBlur={validateInput}/>
-                    {error.password2 && <Alert color="danger" >{error.password2}</Alert>}
+                    {error.password2 && <Alert color="danger">{error.password2}</Alert>}
 
                     <button type="submit" className="form-gradient-button login-animation login-a6">
-                        Sign Up
+                        {loading ? (
+                            <CircularProgress variant="soft"
+                                              color="info"
+                                              size="sm"/>
+                        ) : (
+                            <span>Sign Up</span>)}
                     </button>
                 </form>
                 {isSubmitted && (
-                <SignUpCompleteModal email={newUserEmail}
-                                     showModal={isSubmitted}
-                                     closeModal={closeModal}/>)}
+                    <SignUpCompleteModal email={newUserEmail}
+                                         showModal={isSubmitted}
+                                         closeModal={closeModal}/>)}
             </div>
 
         </div>

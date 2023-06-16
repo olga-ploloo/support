@@ -10,7 +10,6 @@
 .login-left {
   overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   justify-content: center;
   animation-name: login-left;
