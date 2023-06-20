@@ -14,6 +14,7 @@ import * as constants from "./constatns/ticketConstans";
 import OwnTickets from "./pages/ownTickets";
 import Chat from "./pages/сhat";
 import SignUp from "./pages/signUp";
+import ActivateUser from "./components/activateUser";
 
 export const LoginContext = createContext();
 
@@ -65,6 +66,8 @@ function App() {
                     <Route exac path="/login" element={<Login/>}/>
                     <Route exac path="/chat/:id" element={<Chat/>}/>
                     <Route exac path="/signup" element={<SignUp/>}/>
+                    <Route path="/auth/activate/:uid/:token" element={<ActivateUser/>}/>
+
                 </Routes>
             </Router>
         </LoginContext.Provider>
