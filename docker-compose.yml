@@ -43,13 +43,23 @@ services:
       - redis
       - app
 
-#  frontend:
-#    build:
-#      context: ./frontend
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - frontend:/frontend
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - frontend:/frontend
+
+  nginx:
+      build:
+        context: ./backend
+        dockerfile: Dockerfile.nginx
+      ports:
+        - "80:80"
+      depends_on:
+        - app
+        - frontend
 
 volumes:
   postgres_data:
