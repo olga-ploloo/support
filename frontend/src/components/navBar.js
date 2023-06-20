@@ -31,14 +31,12 @@ const NavBar = () => {
                                         href={'/login'}
                                         onClick={() => {
                                             setLoggedIn(false);
-                                        }}
-                                        className="">
+                                        }}>
                                         Logout
                                     </Nav.Link>
                                 ) : (
                                     <Nav.Link
-                                        href={'/login'}
-                                        className="">
+                                        href={'/login'}>
                                         Login
                                     </Nav.Link>
                                 )}

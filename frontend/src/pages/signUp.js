@@ -1,9 +1,9 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import '../LoginForm.css';
 import axios from "axios";
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import * as constants from "../constatns/ticketConstans";
-import {TextField, CircularProgress} from "@mui/material";
+import { TextField, CircularProgress } from "@mui/material";
 import {Alert} from "reactstrap";
 import SignUpCompleteModal from "../components/SignUpCompleteModal";
 
@@ -115,7 +115,7 @@ const SignUp = () => {
                         Fill in the form
                     </h4>
                 </div>
-                <form className="sign-up-form" onSubmit={handleSubmit}>
+                <form className="sign-up-form"  onSubmit={handleSubmit}>
                     <TextField
                         required
                         label="Name"
@@ -165,9 +165,8 @@ const SignUp = () => {
 
                     <button type="submit" className="form-gradient-button login-animation login-a6">
                         {loading ? (
-                            <CircularProgress variant="soft"
-                                              color="info"
-                                              size="sm"/>
+                            <CircularProgress color="primary"
+                                              size="30"/>
                         ) : (
                             <span>Sign Up</span>)}
                     </button>
@@ -175,9 +174,9 @@ const SignUp = () => {
                 {isSubmitted && (
                     <SignUpCompleteModal email={newUserEmail}
                                          showModal={isSubmitted}
-                                         closeModal={closeModal}/>)}
+                                         closeModal={closeModal}/>
+                )}
             </div>
-
         </div>
     )
 }

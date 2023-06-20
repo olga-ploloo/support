@@ -1,6 +1,5 @@
 import Modal from 'react-bootstrap/Modal';
 import Row from "react-bootstrap/Row";
-import Form from "react-bootstrap/Form";
 import React from "react";
 
 const ActionCompleteModal = ({ticketId, showModal, closeModal}) => {
@@ -32,7 +31,6 @@ const ActionCompleteModal = ({ticketId, showModal, closeModal}) => {
 
                 </Modal.Body>
                 <Modal.Footer>
-
                 </Modal.Footer>
             </Modal>
         </>
