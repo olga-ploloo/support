@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "support"
+name = "Support system"
 version = "0.1.0"
 description = ""
 authors = ["olga.kozintsava <olga.kozintsava@gmail.com>"]

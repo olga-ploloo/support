@@ -23,6 +23,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def save(self, *args, **kwargs):
+        # set the base ROLE for user if not an admin
         if not self.pk and not self.is_superuser:
             self.role = self.base_role
         return super().save(*args, **kwargs)
